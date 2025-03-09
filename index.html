@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Личный кабинет</title>
+    <link rel="stylesheet" href="styles.css">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            background-color: transparent;
+            margin: 0;
+            padding: 20px;
+        }
+        .container {
+            background: transparent;
+            padding: 20px;
+            border-radius: 10px;
+            max-width: 400px;
+            margin: auto;
+        }
+        .header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            font-size: 20px;
+            font-weight: bold;
+            margin-bottom: 20px;
+        }
+        .header-center {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            object-fit: cover;
+        }
+        .banner {
+            margin-bottom: 20px;
+        }
+        .banner img {
+            width: 100%;
+            border-radius: 10px;
+        }
+        .buttons-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 10px;
+        }
+        .button-item {
+            background: transparent;
+            padding: 10px;
+            border-radius: 5px;
+            font-size: 14px;
+            cursor: pointer;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+        .button-item img {
+            width: 50px;
+            height: 50px;
+        }
+        .button-label {
+            margin-top: 5px;
+            font-size: 12px;
+            color: black;
+        }
+        .large-button {
+            background-color: #28a745;
+            color: white;
+            padding: 15px;
+            border-radius: 10px;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            margin-top: -1.5px;
+            width: 100%;
+        }
+        .large-button:hover {
+            background-color: #218838;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <span>Expert Credit</span>
+            <div class="header-center" id="user-header">Загрузка...</div>
+        </div>
+        <div class="banner">
+            <img src="https://via.placeholder.com/400x100" alt="Баннер 1">
+        </div>
+        <div class="buttons-grid">
+            <div class="button-item"><img src="button1.png" alt="Кнопка 1"><span class="button-label">Кнопка 1</span></div>
+            <div class="button-item"><img src="button2.png" alt="Кнопка 2"><span class="button-label">Кнопка 2</span></div>
+            <div class="button-item"><img src="button3.png" alt="Кнопка 3"><span class="button-label">Кнопка 3</span></div>
+            <div class="button-item"><img src="button4.png" alt="Кнопка 4"><span class="button-label">Кнопка 4</span></div>
+            <div class="button-item"><img src="button5.png" alt="Кнопка 5"><span class="button-label">Кнопка 5</span></div>
+            <div class="button-item"><img src="button6.png" alt="Кнопка 6"><span class="button-label">Кнопка 6</span></div>
+            <div class="button-item"><img src="button7.png" alt="Кнопка 7"><span class="button-label">Кнопка 7</span></div>
+            <div class="button-item"><img src="button8.png" alt="Кнопка 8"><span class="button-label">Кнопка 8</span></div>
+        </div>
+        <div class="banner" style="margin-top: 30px;">
+            <img src="https://via.placeholder.com/400x100" alt="Баннер 2">
+        </div>
+        <button class="large-button">Дополнительная кнопка</button>
+    </div>
+    
+    <script src="https://telegram.org/js/telegram-web-app.js"></script>
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            if (window.Telegram && window.Telegram.WebApp) {
+                const tg = window.Telegram.WebApp;
+                tg.expand(); 
+                
+                const user = tg.initDataUnsafe?.user;
+                if (!user) {
+                    return;
+                }
+                
+                const userHeader = document.getElementById("user-header");
+                userHeader.innerHTML = `
+                    <span>${user.username || user.first_name || 'Пользователь'}</span>
+                    <img class="avatar" src="${user.photo_url || 'https://via.placeholder.com/40'}" alt="Аватар">
+                `;
+            }
+        });
+    </script>
+</body>
+</html>
