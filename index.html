@@ -2,16 +2,17 @@
 <html lang="ru">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, maximum-scale=1.0">
     <title>Личный кабинет</title>
     <link rel="stylesheet" href="styles.css">
     <style>
         body {
             font-family: Arial, sans-serif;
             text-align: center;
-            background-color: transparent;
+            background-color: white;
             margin: 0;
             padding: 20px;
+            overflow-x: hidden;
         }
         .container {
             background: transparent;
@@ -66,6 +67,13 @@
             width: 50px;
             height: 50px;
         }
+	    .button-item a:visited, .button-item a:hover, .button-item a:active {
+	               color: inherit;
+	           }
+			   .button-item a {
+			              text-decoration: none;
+			              color: inherit;
+			          }
         .button-label {
             margin-top: 5px;
             font-size: 12px;
@@ -79,11 +87,15 @@
             font-size: 16px;
             font-weight: bold;
             cursor: pointer;
-            margin-top: -1.5px;
+            margin-top: -16.2px;
             width: 100%;
         }
         .large-button:hover {
             background-color: #218838;
+        }
+        .large-button a {
+            text-decoration: none;
+            color: inherit;
         }
     </style>
 </head>
@@ -94,22 +106,22 @@
             <div class="header-center" id="user-header">Загрузка...</div>
         </div>
         <div class="banner">
-            <img src="https://via.placeholder.com/400x100" alt="Баннер 1">
+            <img src="baner1.jpeg" alt="Баннер 1">
         </div>
         <div class="buttons-grid">
-            <div class="button-item"><img src="button1.png" alt="Кнопка 1"><span class="button-label">Кнопка 1</span></div>
-            <div class="button-item"><img src="button2.png" alt="Кнопка 2"><span class="button-label">Кнопка 2</span></div>
-            <div class="button-item"><img src="button3.png" alt="Кнопка 3"><span class="button-label">Кнопка 3</span></div>
-            <div class="button-item"><img src="button4.png" alt="Кнопка 4"><span class="button-label">Кнопка 4</span></div>
-            <div class="button-item"><img src="button5.png" alt="Кнопка 5"><span class="button-label">Кнопка 5</span></div>
-            <div class="button-item"><img src="button6.png" alt="Кнопка 6"><span class="button-label">Кнопка 6</span></div>
-            <div class="button-item"><img src="button7.png" alt="Кнопка 7"><span class="button-label">Кнопка 7</span></div>
-            <div class="button-item"><img src="button8.png" alt="Кнопка 8"><span class="button-label">Кнопка 8</span></div>
+            <div class="button-item"><a href="Guide.html"><img src="guide.png" alt="Кнопка 1"><span class="button-label">Гайд</span></div></a>
+            <div class="button-item"><a href="https://2gis.kz/almaty/inside/9430047375024031/firm/70000001065238061/tab/reviews?m=76.902419%2C43.237714%2F16"><img src="say.png" alt="Кнопка 2"><span class="button-label">Отзыв</span></div></a>
+            <div class="button-item"><a href="https://t.me/managers_assessmentBOT"><img src="man.png" alt="Кнопка 3"><span class="button-label">Оценка эксперта</span></div></a>
+            <div class="button-item"><a href="https://pay.kaspi.kz/pay/klcx3wrc" target="_blank"><img src="pay.png" alt="Кнопка 4"><span class="button-label">Оплата</span></div></a>
+            <div class="button-item"><a href="https://www.instagram.com/kanat_expert/" target="_blank"><img src="insta.png" alt="Кнопка 5"><span class="button-label">Instagram</span></div></a>
+            <div class="button-item"><a href="https://www.youtube.com/@kanat_expert" target="_blank"><img src="you.png" alt="Кнопка 6"><span class="button-label">YouTube</span></div></a>
+            <div class="button-item"><a href="https://wa.me/77753181260" target="_blank"><img src="whats.png" alt="Кнопка 7"><span class="button-label">What's app</span></div></a>
+            <div class="button-item"><a href="#"><img src="face.png" alt="Кнопка 7"><span class="button-label">FaceBook</span></div></a>
         </div>
         <div class="banner" style="margin-top: 30px;">
-            <img src="https://via.placeholder.com/400x100" alt="Баннер 2">
+            <img src="ban3.jpeg" alt="Баннер 2">
         </div>
-        <button class="large-button">Дополнительная кнопка</button>
+        <button class="large-button"><a href="https://2gis.kz/almaty/geo/9430047375024031/76.902397,43.237659" target="_blank">Найти нас на карте</button></a>
     </div>
     
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
