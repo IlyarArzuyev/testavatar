@@ -21,19 +21,18 @@
             max-width: 400px;
             margin: auto;
         }
-         .header {
+        .header {
             display: flex;
             align-items: center;
-            justify-content: space-between; /* Распределяем пространство между элементами */
+            justify-content: space-between;
             font-size: 20px;
             font-weight: bold;
             margin-bottom: 20px;
         }
-           .header-center {
+        .header-center {
             display: flex;
             align-items: center;
             gap: 10px;
-            order: -1; /* Перемещаем блок с аватаркой и ником в начало */
         }
         .avatar {
             width: 40px;
@@ -106,13 +105,29 @@
             width: 100%;
             height: auto;
         }
+	    .header, .pagination-container {
+	               position: fixed;
+				   width: 100%;
+				              background-color: white;
+				              z-index: 10;
+			   }
+			   .content {
+			               position: absolute;
+			               top: 70px;
+			               bottom: 70px;
+			               left: 0;
+			               right: 0;
+			               overflow-y: auto;
+			               padding: 20px;
+			               box-sizing: border-box;
+					   }
     </style>
 </head>
 <body>
-     <div class="container" id="page-1">
+    <div class="container" id="page-1">
         <div class="header">
             <div class="header-center" id="user-header">Загрузка...</div>
-            <span>Expert Credit</span> <!-- Надпись справа -->
+            <span>Expert Credit</span>
         </div>
         <div><img src="ex.png.PNG" width="735" height="400" alt="Баннер"></div>
         <div class="buttons-grid">
@@ -128,19 +143,23 @@
         <div style="margin-top: 20px;"><img src="Текст абзаца.png" width="735" height="400" alt="Баннер"></div>
         <a class="large-button" href="https://example.com">Перейти на сайт</a>
     </div>
- <script>
+ <script src="https://telegram.org/js/telegram-web-app.js"></script>
+    <script>
         document.addEventListener("DOMContentLoaded", function() {
             if (window.Telegram && window.Telegram.WebApp) {
                 const tg = window.Telegram.WebApp;
-                tg.expand();
+                tg.expand(); 
                 
                 const user = tg.initDataUnsafe?.user;
-                if (!user) return;
+                if (!user) {
+                    return;
+                }
                 
                 const userHeader = document.getElementById("user-header");
-                userHeader.innerHTML = 
-                    `<img class="avatar" src="${user.photo_url || 'https://via.placeholder.com/40'}" alt="Аватар">
-                    <span>${user.username || user.first_name || 'Пользователь'}</span>`;
+                userHeader.innerHTML = `
+                    <span>${user.username || user.first_name || 'Пользователь'}</span>
+                    <img class="avatar" src="${user.photo_url || 'https://via.placeholder.com/40'}" alt="Аватар">
+                `;
             }
         });
     </script>
