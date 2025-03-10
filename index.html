@@ -6,7 +6,7 @@
     <title>Личный кабинет</title>
     <link rel="stylesheet" href="styles.css">
     <style>
-        body {
+      body {
             font-family: Arial, sans-serif;
             text-align: center;
             background-color: white;
@@ -18,7 +18,7 @@
             background: transparent;
             padding: 20px;
             border-radius: 10px;
-            max-width: auto;
+            max-width: 400px;
             margin: auto;
         }
         .header {
@@ -49,6 +49,8 @@
         .button-item {
             padding: 10px;
             cursor: pointer;
+            background-color: transparent;
+            border-radius: 10px;
         }
         .button-item img {
             width: 50px;
@@ -57,37 +59,43 @@
         .button-label {
             margin-top: 5px;
             font-size: 12px;
-            color: black;
+            color: white;
         }
         .large-button {
             background-color: #28a745;
             color: white;
-            padding: 15px;
+            padding: 13px;
             border-radius: 10px;
             font-size: 16px;
             cursor: pointer;
             margin-top: 20px;
-           max-width: 400px;
+            max-width: 400px;
             text-decoration: none;
             display: block;
         }
-	    .pagination-button {
-	               width: 50px;
-	               height: 50px;
-	               background-color: transparent;
-	               border: none;
-	               border-radius: 10px;
-	               margin: 10px;
-	               cursor: pointer;
-	           }
-	           .pagination-button img {
-	               width: 50px;
-	               height: 50px;
-	               border-radius: 10px;
-	           }
+        .pagination-button {
+            width: 50px;
+            height: 50px;
+            background-color: transparent;
+            border: none;
+            border-radius: 2px;
+            margin: 10px;
+            cursor: pointer;
+            margin-top: -15px;
+            align-items: center;
+			
+			
+        }
+        .pagination-button img {
+            max-width: 30px;
+            max-height: 30px;
+            border-radius: 8px;
+        }
 			   img[alt="Баннер"] {
-			              border-radius: 30px;
-			          }
+            border-radius: 10px;
+            width: 100%;
+            height: auto;
+        }
     </style>
 </head>
 <body>
