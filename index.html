@@ -18,7 +18,7 @@
             background: transparent;
             padding: 20px;
             border-radius: 10px;
-            max-width: 400px;
+            max-width: 735px;
             margin: auto;
         }
         .header {
@@ -40,40 +40,20 @@
             border-radius: 50%;
             object-fit: cover;
         }
-        .banner {
-            margin-bottom: 20px;
-        }
-        .banner img {
-            width: 100%;
-            border-radius: 10px;
-        }
         .buttons-grid {
             display: grid;
             grid-template-columns: repeat(4, 1fr);
             gap: 10px;
+            margin-top: 20px;
         }
         .button-item {
-            background: transparent;
             padding: 10px;
-            border-radius: 5px;
-            font-size: 14px;
             cursor: pointer;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
         }
         .button-item img {
             width: 50px;
             height: 50px;
         }
-	    .button-item a:visited, .button-item a:hover, .button-item a:active {
-	               color: inherit;
-	           }
-			   .button-item a {
-			              text-decoration: none;
-			              color: inherit;
-			          }
         .button-label {
             margin-top: 5px;
             font-size: 12px;
@@ -85,63 +65,93 @@
             padding: 15px;
             border-radius: 10px;
             font-size: 16px;
-            font-weight: bold;
             cursor: pointer;
-            margin-top: -16.2px;
-            width: 100%;
-        }
-        .large-button:hover {
-            background-color: #218838;
-        }
-        .large-button a {
+            margin-top: 20px;
+           max-width: 735px;
             text-decoration: none;
-            color: inherit;
+            display: block;
         }
+	    .pagination-button {
+	               width: 50px;
+	               height: 50px;
+	               background-color: transparent;
+	               border: none;
+	               border-radius: 10px;
+	               margin: 10px;
+	               cursor: pointer;
+	           }
+	           .pagination-button img {
+	               width: 50px;
+	               height: 50px;
+	               border-radius: 10px;
+	           }
+			   img[alt="Баннер"] {
+			              border-radius: 30px;
+			          }
     </style>
 </head>
 <body>
-    <div class="container">
+    <div class="container" id="page-1">
         <div class="header">
             <span>Expert Credit</span>
             <div class="header-center" id="user-header">Загрузка...</div>
         </div>
-        <div class="banner">
-            <img src="ex.png.PNG" alt="Баннер 1">
-        </div>
+        <div><img src="ban1.png" width="735" height="400" alt="Баннер"></div>
         <div class="buttons-grid">
-            <div class="button-item"><a href="Guide.html"><img src="guide.png" alt="Кнопка 1"><span class="button-label">Гайд</span></div></a>
-            <div class="button-item"><a href="https://2gis.kz/almaty/inside/9430047375024031/firm/70000001065238061/tab/reviews?m=76.902419%2C43.237714%2F16"><img src="say.png" alt="Кнопка 2"><span class="button-label">Отзыв</span></div></a>
-            <div class="button-item"><a href="https://t.me/managers_assessmentBOT"><img src="man.png" alt="Кнопка 3"><span class="button-label">Оценка эксперта</span></div></a>
-            <div class="button-item"><a href="https://pay.kaspi.kz/pay/klcx3wrc" target="_blank"><img src="pay.png" alt="Кнопка 4"><span class="button-label">Оплата</span></div></a>
-            <div class="button-item"><a href="https://www.instagram.com/kanat_expert/" target="_blank"><img src="insta.png" alt="Кнопка 5"><span class="button-label">Instagram</span></div></a>
-            <div class="button-item"><a href="https://www.youtube.com/@kanat_expert" target="_blank"><img src="you.png" alt="Кнопка 6"><span class="button-label">YouTube</span></div></a>
-            <div class="button-item"><a href="https://wa.me/77753181260" target="_blank"><img src="whats.png" alt="Кнопка 7"><span class="button-label">What's app</span></div></a>
-            <div class="button-item"><a href="#"><img src="face.png" alt="Кнопка 7"><span class="button-label">FaceBook</span></div></a>
+            <div class="button-item"><img src="guide.png"><div class="button-label">Кнопка 1</div></div>
+            <div class="button-item"><img src="say.png"><div class="button-label">Кнопка 2</div></div>
+            <div class="button-item"><img src="pay.png"><div class="button-label">Кнопка 3</div></div>
+            <div class="button-item"><img src="man.png"><div class="button-label">Кнопка 4</div></div>
+            <div class="button-item"><img src="whats.png"><div class="button-label">Кнопка 5</div></div>
+            <div class="button-item"><img src="insta.png"><div class="button-label">Кнопка 6</div></div>
+            <div class="button-item"><img src="you.png"><div class="button-label">Кнопка 7</div></div>
+            <div class="button-item"><img src="face.png"><div class="button-label">Кнопка 8</div></div>
         </div>
-        <div class="banner" style="margin-top: 30px;">
-            <img src="Текст абзаца.png" alt="Баннер 2">
-        </div>
-        <button class="large-button"><a href="https://2gis.kz/almaty/geo/9430047375024031/76.902397,43.237659" target="_blank">Найти нас на карте</button></a>
+        <div style="margin-top: 20px;"><img src="ban3.jpeg" width="735" height="400" alt="Баннер"></div>
+        <a class="large-button" href="https://example.com">Перейти на сайт</a>
     </div>
-    
-    <script src="https://telegram.org/js/telegram-web-app.js"></script>
+
+    <div class="container" id="page-2" style="display: none;">
+        
+        <div class="header">
+            <span>Expert Credit2</span>
+            <div class="header-center" id="user-header">Загрузка...</div>
+        </div>
+        <div><img src="banner1.jpg" width="735" height="400" alt="Баннер"></div>
+        <div class="buttons-grid">
+            <div class="button-item"><img src="icon1.png"><div class="button-label">Кнопка 1</div></div>
+            <div class="button-item"><img src="icon2.png"><div class="button-label">Кнопка 2</div></div>
+            <div class="button-item"><img src="icon3.png"><div class="button-label">Кнопка 3</div></div>
+            <div class="button-item"><img src="icon4.png"><div class="button-label">Кнопка 4</div></div>
+            <div class="button-item"><img src="icon5.png"><div class="button-label">Кнопка 5</div></div>
+            <div class="button-item"><img src="icon6.png"><div class="button-label">Кнопка 6</div></div>
+            <div class="button-item"><img src="icon7.png"><div class="button-label">Кнопка 7</div></div>
+            <div class="button-item"><img src="icon8.png"><div class="button-label">Кнопка 8</div></div>
+        </div>
+        <div style="margin-top: 20px;"><img src="banner2.jpg" width="735" height="400" alt="Баннер"></div>
+        <a class="large-button" href="https://example.com">Перейти на сайт</a>
+    </div>
+
+
+    <div class="pagination-container">
+        <button class="pagination-button" id="prev-page"><img src="ic12.png" alt="Предыдущая"></button>
+        <button class="pagination-button" id="next-page"><img src="ic2.png" alt="Следующая"></button>
+    </div>
+
     <script>
-        document.addEventListener("DOMContentLoaded", function() {
-            if (window.Telegram && window.Telegram.WebApp) {
-                const tg = window.Telegram.WebApp;
-                tg.expand(); 
-                
-                const user = tg.initDataUnsafe?.user;
-                if (!user) {
-                    return;
-                }
-                
-                const userHeader = document.getElementById("user-header");
-                userHeader.innerHTML = `
-                    <span>${user.username || user.first_name || 'Пользователь'}</span>
-                    <img class="avatar" src="${user.photo_url || 'https://via.placeholder.com/40'}" alt="Аватар">
-                `;
-            }
+        document.addEventListener('DOMContentLoaded', function () {
+            const page1 = document.getElementById('page-1');
+            const page2 = document.getElementById('page-2');
+
+            document.getElementById('prev-page').addEventListener('click', () => {
+                page1.style.display = 'block';
+                page2.style.display = 'none';
+            });
+
+            document.getElementById('next-page').addEventListener('click', () => {
+                page1.style.display = 'none';
+                page2.style.display = 'block';
+            });
         });
     </script>
 </body>
