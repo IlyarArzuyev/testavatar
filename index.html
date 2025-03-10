@@ -118,7 +118,26 @@
         <div style="margin-top: 20px;"><img src="ban3.jpeg" width="735" height="400" alt="Баннер"></div>
         <a class="large-button" href="https://example.com">Перейти на сайт</a>
     </div>
-
+ <script src="https://telegram.org/js/telegram-web-app.js"></script>
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            if (window.Telegram && window.Telegram.WebApp) {
+                const tg = window.Telegram.WebApp;
+                tg.expand(); 
+                
+                const user = tg.initDataUnsafe?.user;
+                if (!user) {
+                    return;
+                }
+                
+                const userHeader = document.getElementById("user-header");
+                userHeader.innerHTML = `
+                    <span>${user.username || user.first_name || 'Пользователь'}</span>
+                    <img class="avatar" src="${user.photo_url || 'https://via.placeholder.com/40'}" alt="Аватар">
+                `;
+            }
+        });
+    </script>
     <div class="container" id="page-2" style="display: none;">
         
         <div class="header">
