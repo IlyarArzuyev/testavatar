@@ -1,0 +1,216 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <title>Ипотечный калькулятор</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.28/jspdf.plugin.autotable.min.js"></script>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 20px auto;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+
+        .calculator {
+            background: white;
+            padding: 25px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+        }
+
+        .input-group {
+            margin-bottom: 15px;
+            display: grid;
+            grid-template-columns: 1fr 2fr;
+            align-items: center;
+            gap: 10px;
+        }
+
+        input, select {
+            padding: 8px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 16px;
+        }
+
+        button {
+            background: #4CAF50;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+
+        button:hover {
+            background: #45a049;
+        }
+
+        .results {
+            margin-top: 20px;
+            padding: 15px;
+            background: #f8f9fa;
+            border-radius: 4px;
+        }
+
+        .hidden {
+            display: none;
+        }
+
+        #paymentSchedule {
+            margin-top: 20px;
+            max-height: 300px;
+            overflow-y: auto;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 10px;
+        }
+
+        th, td {
+            border: 1px solid #ddd;
+            padding: 8px;
+            text-align: center;
+        }
+
+        th {
+            background-color: #4CAF50;
+            color: white;
+        }
+    </style>
+</head>
+<body>
+    <div class="calculator">
+        <div class="input-group">
+            <label>Сумма кредита:</label>
+            <input type="text" id="loanAmount" placeholder="1 000 000">
+        </div>
+        
+        <div class="input-group">
+            <label>Процентная ставка (%):</label>
+            <input type="number" id="interestRate" step="0.1" placeholder="7.5">
+        </div>
+        
+        <div class="input-group">
+            <label>Срок кредита (лет):</label>
+            <input type="number" id="loanTerm" placeholder="20">
+        </div>
+
+        <button onclick="calculateMortgage()">Рассчитать</button>
+        
+        <div class="results">
+            <h3>Результаты:</h3>
+            <p>Ежемесячный платеж: <span id="monthlyPayment">0</span></p>
+            <p>Общая сумма выплат: <span id="totalPayment">0</span></p>
+            <p>Сумма переплаты: <span id="overpayment">0</span></p>
+            
+            <div id="paymentSchedule"></div>
+            <button id="downloadPDF" class="hidden" onclick="generatePDF()">Скачать график PDF</button>
+        </div>
+    </div>
+
+    <script>
+        function formatNumber(num) {
+            return num.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ' ');
+        }
+
+        function parseFormattedNumber(str) {
+            return parseInt(str.replace(/\s/g, ''));
+        }
+
+        function calculateMortgage() {
+            const loanAmount = parseFormattedNumber(document.getElementById('loanAmount').value);
+            const interestRate = parseFloat(document.getElementById('interestRate').value) / 100 / 12;
+            const loanTerm = parseFloat(document.getElementById('loanTerm').value) * 12;
+
+            const monthlyPayment = (loanAmount * interestRate) / (1 - Math.pow(1 + interestRate, -loanTerm));
+            const totalPayment = monthlyPayment * loanTerm;
+            const overpayment = totalPayment - loanAmount;
+
+            document.getElementById('monthlyPayment').textContent = formatNumber(monthlyPayment.toFixed(2));
+            document.getElementById('totalPayment').textContent = formatNumber(totalPayment.toFixed(2));
+            document.getElementById('overpayment').textContent = formatNumber(overpayment.toFixed(2));
+
+            let balance = loanAmount;
+            let scheduleHTML = '<h4>График платежей:</h4><table><tr><th>Месяц</th><th>Платеж</th><th>Основной долг</th><th>Проценты</th><th>Остаток</th></tr>';
+            
+            for(let month = 1; month <= loanTerm; month++) {
+                const interest = balance * interestRate;
+                const principal = monthlyPayment - interest;
+                balance -= principal;
+                
+                scheduleHTML += `<tr>
+                    <td>${month}</td>
+                    <td>${formatNumber(monthlyPayment.toFixed(2))}</td>
+                    <td>${formatNumber(principal.toFixed(2))}</td>
+                    <td>${formatNumber(interest.toFixed(2))}</td>
+                    <td>${formatNumber(Math.abs(balance).toFixed(2))}</td>
+                </tr>`;
+                
+                if(balance <= 0) break;
+            }
+            
+            scheduleHTML += '</table>';
+            document.getElementById('paymentSchedule').innerHTML = scheduleHTML;
+            document.getElementById('downloadPDF').classList.remove('hidden');
+        }
+
+        async function generatePDF() {
+            const { jsPDF } = window.jspdf;
+            const doc = new jsPDF();
+            
+            // Добавление логотипа
+            const logo = new Image();
+            logo.src = 'insta.png';
+            
+            await new Promise((resolve) => {
+                logo.onload = resolve;
+            });
+
+            doc.addImage(logo, 'PNG', 10, 10, 50, 20);
+            
+            // Заголовок
+            doc.setFont('Helvetica', 'normal');
+            doc.setFontSize(16);
+            doc.text("График платежей по кредиту", 65, 25);
+
+            // Таблица
+            doc.autoTable({
+                html: '#paymentSchedule table',
+                startY: 40,
+                theme: 'grid',
+                headStyles: { 
+                    fillColor: [76, 175, 80],
+                    textColor: [255, 255, 255],
+                    fontStyle: 'normal',
+                    fontSize: 10
+                },
+                bodyStyles: {
+                    fontSize: 8,
+                    textColor: [0, 0, 0],
+                    font: 'Helvetica'
+                },
+                styles: {
+                    font: 'Helvetica',
+                    fontSize: 8,
+                    cellPadding: 1.5
+                }
+            });
+
+            doc.save('график_платежей.pdf');
+        }
+
+        document.getElementById('loanAmount').addEventListener('input', function(e) {
+            let value = e.target.value.replace(/\s/g, '');
+            value = value.replace(/\B(?=(\d{3})+(?!\d))/g, ' ');
+            e.target.value = value;
+        });
+    </script>
+</body>
+</html>
