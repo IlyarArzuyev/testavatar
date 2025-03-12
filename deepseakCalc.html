@@ -2,10 +2,9 @@
 <html lang="ru">
 <head>
     <meta charset="UTF-8">
-    <title>Ипотечный калькулятор</title>
+    <title>потечный калькулятор</title>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.28/jspdf.plugin.autotable.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/@canvas-fonts/arial@1.0.3/arial.min.js"></script>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -117,8 +116,6 @@
     </div>
 
     <script>
-        let scheduleData = [];
-
         function formatNumber(num) {
             return num.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ' ');
         }
@@ -141,22 +138,13 @@
             document.getElementById('overpayment').textContent = formatNumber(overpayment.toFixed(2));
 
             let balance = loanAmount;
-            scheduleData = [];
-            let scheduleHTML = '<h4>График платежей:</h4><table><tr><th>Месяц</th><th>Ежемесячный платеж</th><th>Основной долг</th><th>Проценты банка</th><th>Остаток</th></tr>';
+            let scheduleHTML = '<h4>График платежей:</h4><table><tr><th>Месяц</th><th>Платеж</th><th>Основной долг</th><th>Проценты</th><th>Остаток</th></tr>';
             
             for(let month = 1; month <= loanTerm; month++) {
                 const interest = balance * interestRate;
                 const principal = monthlyPayment - interest;
                 balance -= principal;
                 
-                scheduleData.push({
-                    month: month,
-                    payment: monthlyPayment.toFixed(2),
-                    principal: principal.toFixed(2),
-                    interest: interest.toFixed(2),
-                    balance: Math.abs(balance).toFixed(2)
-                });
-
                 scheduleHTML += `<tr>
                     <td>${month}</td>
                     <td>${formatNumber(monthlyPayment.toFixed(2))}</td>
@@ -174,55 +162,76 @@
         }
 
         async function generatePDF() {
-            const { jsPDF } = window.jspdf;
-            const doc = new jsPDF();
-            
-            // Регистрация шрифта
-            doc.addFileToVFS("Arial.ttf", arial);
-            doc.addFont("Arial.ttf", "Arial", "normal");
-            doc.setFont("Arial");
+    const { jsPDF } = window.jspdf;
+    const doc = new jsPDF('l', 'mm', 'a4'); // Альбомная ориентация
+    
+    // Логотип (замените путь на актуальный)
+    const logo = new Image();
+    logo.src = 'logo.png';
+    
+    await new Promise((resolve) => {
+        logo.onload = resolve;
+    });
 
-            // Заголовки таблицы
-            const headers = [['Месяц', 'Ежемесячный платеж', 'Основной долг', 'Проценты банка', 'Остаток']];
-            
-            // Подготовка данных
-            const body = scheduleData.map(item => [
-                item.month,
-                formatNumber(item.payment),
-                formatNumber(item.principal),
-                formatNumber(item.interest),
-                formatNumber(item.balance)
-            ]);
+    // Добавляем лого и заголовок
+    doc.addImage(logo, 'PNG', 10, 10, 40, 15);
+    
+    // Основные параметры кредита
+    const loanAmount = document.getElementById('loanAmount').value;
+    const interestRate = document.getElementById('interestRate').value;
+    const loanTerm = document.getElementById('loanTerm').value;
+    
+    doc.setFont('helvetica', 'bold');
+    doc.setFontSize(18);
+    doc.text("Детализация кредитных платежей", 105, 20, { align: 'center' });
+    
+    doc.setFontSize(10);
+    doc.text(`Сумма кредита: ${loanAmount} ₽`, 15, 30);
+    doc.text(`Процентная ставка: ${interestRate}%`, 15, 35);
+    doc.text(`Срок кредита: ${loanTerm} лет`, 15, 40);
 
-            // Заголовок документа
-            doc.setFontSize(16);
-            doc.text("Предварительный график платежей", 50, 25);
+    // Настройки таблицы
+    doc.autoTable({
+        html: '#paymentSchedule table',
+        startY: 45,
+        theme: 'grid',
+        styles: {
+            font: 'helvetica',
+            fontSize: 8,
+            cellPadding: 2,
+            lineColor: [44, 62, 80],
+            lineWidth: 0.25
+        },
+        headStyles: {
+            fillColor: [52, 152, 219],
+            textColor: 255,
+            fontStyle: 'bold',
+            fontSize: 9
+        },
+        bodyStyles: {
+            textColor: [50, 50, 50],
+            fontSize: 8
+        },
+        columnStyles: {
+            0: { cellWidth: 15 },
+            1: { cellWidth: 25 },
+            2: { cellWidth: 30 },
+            3: { cellWidth: 30 },
+            4: { cellWidth: 35 }
+        },
+        margin: { top: 45 },
+        pageBreak: 'auto',
+        showHead: 'everyPage'
+    });
 
-            // Создание таблицы
-            doc.autoTable({
-                head: headers,
-                body: body,
-                startY: 35,
-                theme: 'grid',
-                headStyles: { 
-                    fillColor: [76, 175, 80],
-                    textColor: [255, 255, 255],
-                    font: "Arial",
-                    fontSize: 10
-                },
-                bodyStyles: {
-                    font: "Arial",
-                    fontSize: 8,
-                    textColor: [0, 0, 0]
-                },
-                styles: {
-                    font: "Arial",
-                    cellPadding: 1.5
-                }
-            });
-
-            doc.save('график_платежей.pdf');
-        }
+    // Футер
+    const finalY = doc.lastAutoTable.finalY || 40;
+    doc.setFontSize(8);
+    doc.setTextColor(100);
+    doc.text(`Сгенерировано: ${new Date().toLocaleDateString()}`, 15, finalY + 10);
+    
+    doc.save('График_платежей_по_кредиту.pdf');
+}
 
         document.getElementById('loanAmount').addEventListener('input', function(e) {
             let value = e.target.value.replace(/\s/g, '');
