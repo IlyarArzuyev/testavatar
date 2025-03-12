@@ -2,245 +2,85 @@
 <html lang="ru">
 <head>
     <meta charset="UTF-8">
-    <title>Bуотечный калькулятор</title>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.28/jspdf.plugin.autotable.min.js"></script>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            max-width: 800px;
-            margin: 20px auto;
-            padding: 20px;
-            background-color: #f5f5f5;
-        }
-
-        .calculator {
-            background: white;
-            padding: 25px;
-            border-radius: 10px;
-            box-shadow: 0 0 10px rgba(0,0,0,0.1);
-        }
-
-        .input-group {
-            margin-bottom: 15px;
-            display: grid;
-            grid-template-columns: 1fr 2fr;
-            align-items: center;
-            gap: 10px;
-        }
-
-        input, select {
-            padding: 8px;
-            border: 1px solid #ddd;
-            border-radius: 4px;
-            font-size: 16px;
-        }
-
-        button {
-            background: #4CAF50;
-            color: white;
-            padding: 10px 20px;
-            border: none;
-            border-radius: 4px;
-            cursor: pointer;
-            font-size: 16px;
-        }
-
-        button:hover {
-            background: #45a049;
-        }
-
-        .results {
-            margin-top: 20px;
-            padding: 15px;
-            background: #f8f9fa;
-            border-radius: 4px;
-        }
-
-        .hidden {
-            display: none;
-        }
-
-        #paymentSchedule {
-            margin-top: 20px;
-            max-height: 300px;
-            overflow-y: auto;
-        }
-
-        table {
-            width: 100%;
-            border-collapse: collapse;
-            margin-top: 10px;
-        }
-
-        th, td {
-            border: 1px solid #ddd;
-            padding: 8px;
-            text-align: center;
-        }
-
-        th {
-            background-color: #4CAF50;
-            color: white;
-        }
-    </style>
-</head>
-<body>
-    <div class="calculator">
-        <div class="input-group">
-            <label>Сумма кредита:</label>
-            <input type="text" id="loanAmount" placeholder="1 000 000">
-        </div>
-        
-        <div class="input-group">
-            <label>Процентная ставка (%):</label>
-            <input type="number" id="interestRate" step="0.1" placeholder="7.5">
-        </div>
-        
-        <div class="input-group">
-            <label>Срок кредита (лет):</label>
-            <input type="number" id="loanTerm" placeholder="20">
-        </div>
-
-        <button onclick="calculateMortgage()">Рассчитать</button>
-        
-        <div class="results">
-            <h3>Результаты:</h3>
-            <p>Ежемесячный платеж: <span id="monthlyPayment">0</span></p>
-            <p>Общая сумма выплат: <span id="totalPayment">0</span></p>
-            <p>Сумма переплаты: <span id="overpayment">0</span></p>
-            
-            <div id="paymentSchedule"></div>
-            <button id="downloadPDF" class="hidden" onclick="generatePDF()">Скачать график PDF</button>
-        </div>
-    </div>
-
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ипотечный Калькулятор</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.9.2/html2pdf.bundle.min.js"></script>
     <script>
-        function formatNumber(num) {
-            return num.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ' ');
-        }
+        function calculate() {
+            const amount = parseFloat(document.getElementById('amount').value);
+            const rate = parseFloat(document.getElementById('rate').value) / 100 / 12;
+            const years = parseFloat(document.getElementById('years').value);
+            const months = years * 12;
+            const type = document.querySelector('input[name="type"]:checked').value;
 
-        function parseFormattedNumber(str) {
-            return parseInt(str.replace(/\s/g, ''));
-        }
+            let result = '';
+            let totalPayment = 0;
+            let overpayment = 0;
+            let payments = [];
 
-        function calculateMortgage() {
-            const loanAmount = parseFormattedNumber(document.getElementById('loanAmount').value);
-            const interestRate = parseFloat(document.getElementById('interestRate').value) / 100 / 12;
-            const loanTerm = parseFloat(document.getElementById('loanTerm').value) * 12;
+            if (type === 'annuity') {
+                const annuityCoefficient = (rate * Math.pow(1 + rate, months)) / (Math.pow(1 + rate, months) - 1);
+                const monthlyPayment = amount * annuityCoefficient;
+                totalPayment = monthlyPayment * months;
+                overpayment = totalPayment - amount;
+                for (let i = 1; i <= months; i++) {
+                    payments.push(`Месяц ${i}: ${monthlyPayment.toFixed(2)} руб.`);
+                }
+            } else {
+                let remainingAmount = amount;
+                const principalPayment = amount / months;
 
-            const monthlyPayment = (loanAmount * interestRate) / (1 - Math.pow(1 + interestRate, -loanTerm));
-            const totalPayment = monthlyPayment * loanTerm;
-            const overpayment = totalPayment - loanAmount;
+                for (let i = 1; i <= months; i++) {
+                    const interestPayment = remainingAmount * rate;
+                    const monthlyPayment = principalPayment + interestPayment;
+                    totalPayment += monthlyPayment;
+                    remainingAmount -= principalPayment;
+                    payments.push(`Месяц ${i}: ${monthlyPayment.toFixed(2)} руб.`);
+                }
 
-            document.getElementById('monthlyPayment').textContent = formatNumber(monthlyPayment.toFixed(2));
-            document.getElementById('totalPayment').textContent = formatNumber(totalPayment.toFixed(2));
-            document.getElementById('overpayment').textContent = formatNumber(overpayment.toFixed(2));
-
-            let balance = loanAmount;
-            let scheduleHTML = '<h4>График платежей:</h4><table><tr><th>Месяц</th><th>Платеж</th><th>Основной долг</th><th>Проценты</th><th>Остаток</th></tr>';
-            
-            for(let month = 1; month <= loanTerm; month++) {
-                const interest = balance * interestRate;
-                const principal = monthlyPayment - interest;
-                balance -= principal;
-                
-                scheduleHTML += `<tr>
-                    <td>${month}</td>
-                    <td>${formatNumber(monthlyPayment.toFixed(2))}</td>
-                    <td>${formatNumber(principal.toFixed(2))}</td>
-                    <td>${formatNumber(interest.toFixed(2))}</td>
-                    <td>${formatNumber(Math.abs(balance).toFixed(2))}</td>
-                </tr>`;
-                
-                if(balance <= 0) break;
+                overpayment = totalPayment - amount;
             }
-            
-            scheduleHTML += '</table>';
-            document.getElementById('paymentSchedule').innerHTML = scheduleHTML;
-            document.getElementById('downloadPDF').classList.remove('hidden');
+
+            document.getElementById('result').innerHTML = `
+                Общая сумма выплат: ${totalPayment.toFixed(2)} руб.<br>
+                Переплата: ${overpayment.toFixed(2)} руб.<br>
+                <br>График платежей:<br>${payments.join('<br>')}
+            `;
         }
 
-        async function generatePDF() {
-  const { jsPDF } = window.jspdf;
-  const doc = new jsPDF('l', 'mm', 'a4');
-  
-  // Добавьте шрифт с поддержкой кириллицы
-  doc.addFont("times", "times", "normal");
-  doc.setFont("times");
-
-    
-    // Логотип (замените путь на актуальный)
-    const logo = new Image();
-    logo.src = 'ban1.png';
-    
-    await new Promise((resolve) => {
-        logo.onload = resolve;
-    });
-
-    // Добавляем лого и заголовок
-    doc.addImage(logo, 'PNG', 10, 10, 40, 15);
-    
-    // Основные параметры кредита
-    const loanAmount = document.getElementById('loanAmount').value;
-    const interestRate = document.getElementById('interestRate').value;
-    const loanTerm = document.getElementById('loanTerm').value;
-    
-    doc.setFont('helvetica', 'bold');
-    doc.setFontSize(18);
-    doc.text("Детализация кредитных платежей", 105, 20, { align: 'center' });
-    
-    doc.setFontSize(10);
-    doc.text(`Сумма кредита: ${loanAmount} ₽`, 15, 30);
-    doc.text(`Процентная ставка: ${interestRate}%`, 15, 35);
-    doc.text(`Срок кредита: ${loanTerm} лет`, 15, 40);
-
-    // Настройки таблицы
-   doc.autoTable({
-    html: '#paymentSchedule table',
-    startY: 45,
-    theme: 'grid',
-    styles: {
-      font: 'times', // Убедитесь, что шрифт поддерживает кириллицу
-      fontSize: 8,
-      lineColor: [44, 62, 80],
-    },
-    headStyles: {
-      fillColor: [52, 152, 219],
-      textColor: 255,
-      fontStyle: 'bold',
-      fontSize: 9
-    },
-        bodyStyles: {
-            textColor: [50, 50, 50],
-            fontSize: 8
-        },
-        columnStyles: {
-            0: { cellWidth: 15 },
-            1: { cellWidth: 25 },
-            2: { cellWidth: 30 },
-            3: { cellWidth: 30 },
-            4: { cellWidth: 35 }
-        },
-        margin: { top: 45 },
-        pageBreak: 'auto',
-        showHead: 'everyPage'
-    });
-
-    // Футер
-    const finalY = doc.lastAutoTable.finalY || 40;
-    doc.setFontSize(8);
-    doc.setTextColor(100);
-    doc.text(`Сгенерировано: ${new Date().toLocaleDateString()}`, 15, finalY + 10);
-    
-    doc.save('График_платежей_по_кредиту.pdf');
-}
-
-        document.getElementById('loanAmount').addEventListener('input', function(e) {
-            let value = e.target.value.replace(/\s/g, '');
-            value = value.replace(/\B(?=(\d{3})+(?!\d))/g, ' ');
-            e.target.value = value;
-        });
+        function downloadPDF() {
+            const element = document.getElementById('result');
+            html2pdf().from(element).save();
+        }
     </script>
+</head>
+<body class="bg-gray-100 text-gray-800">
+<div class="container mx-auto p-4">
+    <div class="bg-white shadow-md rounded-lg p-6">
+        <h1 class="text-2xl font-bold mb-4">Ипотечный Калькулятор</h1>
+        <div class="mb-4">
+            <label>Сумма кредита (руб):</label>
+            <input type="number" id="amount" class="border rounded p-2 w-full" placeholder="1000000">
+        </div>
+        <div class="mb-4">
+            <label>Процентная ставка (% годовых):</label>
+            <input type="number" id="rate" class="border rounded p-2 w-full" placeholder="10">
+        </div>
+        <div class="mb-4">
+            <label>Срок кредита (лет):</label>
+            <input type="number" id="years" class="border rounded p-2 w-full" placeholder="20">
+        </div>
+        <div class="mb-4">
+            <label>Тип платежа:</label><br>
+            <input type="radio" name="type" value="annuity" checked> Аннуитетный
+            <input type="radio" name="type" value="differentiated"> Дифференцированный
+        </div>
+        <button class="bg-blue-500 text-white rounded p-2 mb-4" onclick="calculate()">Рассчитать</button>
+        <button class="bg-green-500 text-white rounded p-2 mb-4" onclick="downloadPDF()">Скачать график (PDF)</button>
+
+        <div id="result" class="mt-4 bg-gray-50 p-4 rounded"></div>
+    </div>
+</div>
 </body>
 </html>
