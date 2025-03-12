@@ -18,8 +18,7 @@
         function calculate() {
             const amount = parseNumber(document.getElementById('amount').value);
             const rate = parseFloat(document.getElementById('rate').value) / 100 / 12;
-            const years = parseFloat(document.getElementById('years').value);
-            const months = years * 12;
+            const months = parseFloat(document.getElementById('months').value);
             const type = document.querySelector('input[name="type"]:checked').value;
 
             let totalPayment = 0;
@@ -82,7 +81,7 @@
             const payments = JSON.parse(sessionStorage.getItem('payments'));
 
             let tableContent = `
-            <div style='display: flex; justify-content: space-between; align-items: center; margin-bottom: 40px;'>
+            <div style='display: flex; justify-content: space-between; align-items: center; margin-bottom: 40px; margin-top: 40px;'>
                 <h1>Предварительный график погашения от Expert Credit</h1>
                 <img src="logo21.png" alt="Логотип Expert Credit" style="height: 50px;">
             </div>
@@ -128,15 +127,15 @@
         <h1 class="text-2xl font-bold mb-4">Ипотечный Калькулятор</h1>
         <div class="mb-4">
             <label>Сумма кредита (₸):</label>
-            <input type="text" id="amount" class="border rounded p-2 w-full" placeholder="Введите сумму">
+            <input type="text" id="amount" class="border rounded p-2 w-full" placeholder="1 000 000">
         </div>
         <div class="mb-4">
             <label>Процентная ставка (% годовых):</label>
-            <input type="number" id="rate" class="border rounded p-2 w-full" placeholder="Введите % ставку">
+            <input type="number" id="rate" class="border rounded p-2 w-full" placeholder="10">
         </div>
         <div class="mb-4">
-            <label>Срок кредита (лет):</label>
-            <input type="number" id="years" class="border rounded p-2 w-full" placeholder="Введите срок">
+            <label>Срок кредита (месяцев):</label>
+            <input type="number" id="months" class="border rounded p-2 w-full" placeholder="240">
         </div>
         <div class="mb-4">
             <label>Тип платежа:</label><br>
