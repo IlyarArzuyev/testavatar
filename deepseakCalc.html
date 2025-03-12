@@ -5,6 +5,7 @@
     <title>Ипотечный калькулятор</title>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.28/jspdf.plugin.autotable.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@canvas-fonts/arial@1.0.3/arial.min.js"></script>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -116,6 +117,8 @@
     </div>
 
     <script>
+        let scheduleData = [];
+
         function formatNumber(num) {
             return num.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ' ');
         }
@@ -138,13 +141,22 @@
             document.getElementById('overpayment').textContent = formatNumber(overpayment.toFixed(2));
 
             let balance = loanAmount;
-            let scheduleHTML = '<h4>График платежей:</h4><table><tr><th>Месяц</th><th>Платеж</th><th>Основной долг</th><th>Проценты</th><th>Остаток</th></tr>';
+            scheduleData = [];
+            let scheduleHTML = '<h4>График платежей:</h4><table><tr><th>Месяц</th><th>Ежемесячный платеж</th><th>Основной долг</th><th>Проценты банка</th><th>Остаток</th></tr>';
             
             for(let month = 1; month <= loanTerm; month++) {
                 const interest = balance * interestRate;
                 const principal = monthlyPayment - interest;
                 balance -= principal;
                 
+                scheduleData.push({
+                    month: month,
+                    payment: monthlyPayment.toFixed(2),
+                    principal: principal.toFixed(2),
+                    interest: interest.toFixed(2),
+                    balance: Math.abs(balance).toFixed(2)
+                });
+
                 scheduleHTML += `<tr>
                     <td>${month}</td>
                     <td>${formatNumber(monthlyPayment.toFixed(2))}</td>
@@ -165,40 +177,46 @@
             const { jsPDF } = window.jspdf;
             const doc = new jsPDF();
             
-            // Добавление логотипа
-            const logo = new Image();
-            logo.src = 'insta.png';
-            
-            await new Promise((resolve) => {
-                logo.onload = resolve;
-            });
+            // Регистрация шрифта
+            doc.addFileToVFS("Arial.ttf", arial);
+            doc.addFont("Arial.ttf", "Arial", "normal");
+            doc.setFont("Arial");
 
-            doc.addImage(logo, 'PNG', 10, 10, 50, 20);
+            // Заголовки таблицы
+            const headers = [['Месяц', 'Ежемесячный платеж', 'Основной долг', 'Проценты банка', 'Остаток']];
             
-            // Заголовок
-            doc.setFont('Helvetica', 'normal');
+            // Подготовка данных
+            const body = scheduleData.map(item => [
+                item.month,
+                formatNumber(item.payment),
+                formatNumber(item.principal),
+                formatNumber(item.interest),
+                formatNumber(item.balance)
+            ]);
+
+            // Заголовок документа
             doc.setFontSize(16);
-            doc.text("График платежей по кредиту", 65, 25);
+            doc.text("Предварительный график платежей", 50, 25);
 
-            // Таблица
+            // Создание таблицы
             doc.autoTable({
-                html: '#paymentSchedule table',
-                startY: 40,
+                head: headers,
+                body: body,
+                startY: 35,
                 theme: 'grid',
                 headStyles: { 
                     fillColor: [76, 175, 80],
                     textColor: [255, 255, 255],
-                    fontStyle: 'normal',
+                    font: "Arial",
                     fontSize: 10
                 },
                 bodyStyles: {
+                    font: "Arial",
                     fontSize: 8,
-                    textColor: [0, 0, 0],
-                    font: 'Helvetica'
+                    textColor: [0, 0, 0]
                 },
                 styles: {
-                    font: 'Helvetica',
-                    fontSize: 8,
+                    font: "Arial",
                     cellPadding: 1.5
                 }
             });
