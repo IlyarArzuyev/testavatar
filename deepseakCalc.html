@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Ипотечный Калькулятор</title>
+    <title>Калькулятор</title>
     <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.9.2/html2pdf.bundle.min.js"></script>
     <script>
@@ -14,38 +14,80 @@
             const months = years * 12;
             const type = document.querySelector('input[name="type"]:checked').value;
 
-            let result = '';
             let totalPayment = 0;
             let overpayment = 0;
+            let remainingAmount = amount;
             let payments = [];
+
+            let tableContent = '';
 
             if (type === 'annuity') {
                 const annuityCoefficient = (rate * Math.pow(1 + rate, months)) / (Math.pow(1 + rate, months) - 1);
                 const monthlyPayment = amount * annuityCoefficient;
                 totalPayment = monthlyPayment * months;
                 overpayment = totalPayment - amount;
+
                 for (let i = 1; i <= months; i++) {
-                    payments.push(`Месяц ${i}: ${monthlyPayment.toFixed(2)} руб.`);
+                    const interestPayment = remainingAmount * rate;
+                    const principalPayment = monthlyPayment - interestPayment;
+                    remainingAmount -= principalPayment;
+
+                    payments.push({
+                        month: i,
+                        monthlyPayment: monthlyPayment.toFixed(2),
+                        principalPayment: principalPayment.toFixed(2),
+                        interestPayment: interestPayment.toFixed(2),
+                        remainingAmount: remainingAmount.toFixed(2)
+                    });
                 }
             } else {
-                let remainingAmount = amount;
                 const principalPayment = amount / months;
 
                 for (let i = 1; i <= months; i++) {
                     const interestPayment = remainingAmount * rate;
                     const monthlyPayment = principalPayment + interestPayment;
                     totalPayment += monthlyPayment;
-                    remainingAmount -= principalPayment;
-                    payments.push(`Месяц ${i}: ${monthlyPayment.toFixed(2)} руб.`);
-                }
+                    overpayment = totalPayment - amount;
 
-                overpayment = totalPayment - amount;
+                    payments.push({
+                        month: i,
+                        monthlyPayment: monthlyPayment.toFixed(2),
+                        principalPayment: principalPayment.toFixed(2),
+                        interestPayment: interestPayment.toFixed(2),
+                        remainingAmount: remainingAmount.toFixed(2)
+                    });
+
+                    remainingAmount -= principalPayment;
+                }
             }
 
+            tableContent += `<table class='table-auto w-full mt-4 border-collapse border border-gray-300'>
+                <thead>
+                    <tr>
+                        <th class='border border-gray-300 p-2'>Месяц</th>
+                        <th class='border border-gray-300 p-2'>Ежемесячный платёж (руб.)</th>
+                        <th class='border border-gray-300 p-2'>Основной долг (руб.)</th>
+                        <th class='border border-gray-300 p-2'>Проценты банка (руб.)</th>
+                        <th class='border border-gray-300 p-2'>Остаток долга (руб.)</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    ${payments.map(payment => `
+                    <tr>
+                        <td class='border border-gray-300 p-2'>${payment.month}</td>
+                        <td class='border border-gray-300 p-2'>${payment.monthlyPayment}</td>
+                        <td class='border border-gray-300 p-2'>${payment.principalPayment}</td>
+                        <td class='border border-gray-300 p-2'>${payment.interestPayment}</td>
+                        <td class='border border-gray-300 p-2'>${payment.remainingAmount}</td>
+                    </tr>
+                    `).join('')}
+                </tbody>
+            </table>`;
+
             document.getElementById('result').innerHTML = `
-                Общая сумма выплат: ${totalPayment.toFixed(2)} руб.<br>
-                Переплата: ${overpayment.toFixed(2)} руб.<br>
-                <br>График платежей:<br>${payments.join('<br>')}
+                <p>Общая сумма выплат: ${totalPayment.toFixed(2)} руб.</p>
+                <p>Переплата: ${overpayment.toFixed(2)} руб.</p>
+                ${tableContent}
             `;
         }
 
