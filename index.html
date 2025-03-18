@@ -228,8 +228,7 @@
             width: 100%;
             height: auto;
         }
-
-        /* Новые стили для модального окна */
+        /* Модальные окна */
         .modal-overlay {
             position: fixed;
             top: 0;
@@ -244,7 +243,7 @@
             position: fixed;
             left: 0;
             right: 0;
-            bottom: -100%;
+            bottom: -80%;
             height: 80vh;
             background: white;
             border-radius: 20px 20px 0 0;
@@ -282,10 +281,100 @@
         .banner:active {
             transform: scale(0.98);
         }
+        /* Стили контента модальных окон */
+        .modal-content h4 {
+            color: #2c3e50;
+            margin: 15px 0 10px;
+            font-size: 18px;
+        }
+        .modal-content ul {
+            padding-left: 20px;
+            margin: 10px 0;
+        }
+        .modal-content li {
+            margin-bottom: 8px;
+            line-height: 1.5;
+        }
+        .info-box {
+            background: #f8f9fa;
+            border-left: 4px solid #3498db;
+            padding: 15px;
+            margin: 15px 0;
+            border-radius: 4px;
+        }
+        .carousel-container {
+            position: relative;
+            width: 100%;
+            overflow: hidden;
+            margin: 20px 0;
+        }
+        .carousel-slide {
+            display: flex;
+            transition: transform 0.5s ease;
+        }
+        .carousel-image {
+            min-width: 400px;
+            height: 600px;
+            object-fit: cover;
+            border-radius: 10px;
+        }
+        .carousel-button {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            background: rgba(0,0,0,0.5);
+            color: white;
+            border: none;
+            padding: 10px 15px;
+            cursor: pointer;
+            border-radius: 50%;
+            z-index: 10;
+        }
+        .carousel-button.prev {
+            left: 10px;
+        }
+        .carousel-button.next {
+            right: 10px;
+        }
+        .modal-link {
+            color: #3498db;
+            text-decoration: none;
+            font-weight: bold;
+            display: inline-block;
+            margin: 10px 0;
+        }
+        .modal-link:hover {
+            text-decoration: underline;
+        }
+        .feature-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 15px;
+            margin: 20px 0;
+        }
+        .feature-item {
+            padding: 15px;
+            background: #f8f9fa;
+            border-radius: 8px;
+            text-align: center;
+        }
+        .feature-item img {
+            width: 50px;
+            height: 50px;
+            margin-bottom: 10px;
+        }
+        .badge {
+            background: #3498db;
+            color: white;
+            padding: 5px 10px;
+            border-radius: 15px;
+            font-size: 12px;
+            display: inline-block;
+            margin: 5px 0;
+        }
     </style>
 </head>
 <body>
-    <!-- Модальное окно -->
     <div class="modal-overlay" id="modal-overlay"></div>
     <div class="modal" id="modal">
         <div class="modal-header">
@@ -303,9 +392,33 @@
     <!-- Страница 1 -->
     <div class="container" id="page-1">
         <div class="scrollable-content">
-            <div class="banner" data-title="Добро пожаловать!" data-content="Expert Credit - ваш надежный партнер в получении кредитов">
+            <div class="bannr" data-title="Добро пожаловать!" data-content='
+                <div class="info-box">
+                    <h4>Expert Credit - ваш надежный финансовый партнер</h4>
+                    <p>Мы предлагаем:</p>
+                    <ul>
+                        <li>Кредиты под 15% годовых</li>
+                        <li>Ипотека от 12%</li>
+                        <li>Одобрение за 1 час</li>
+                    </ul>
+                    <a href="#calculator" class="modal-link">Рассчитать платеж →</a>
+                </div>
+                <div class="feature-grid">
+                    <div class="feature-item">
+                        <img src="shield.png" alt="Безопасность">
+                        <p>100% безопасность сделок</p>
+                        <span class="badge">Рекомендуем</span>
+                    </div>
+                    <div class="feature-item">
+                        <img src="clock.png" alt="Скорость">
+                        <p>Онлайн-одобрение за 15 минут</p>
+                        <span class="badge">Новинка</span>
+                    </div>
+                </div>
+            '>
                 <img src="ex.png.PNG" width="735" height="400" alt="Баннер">
             </div>
+
             <div class="buttons-grid">
                 <div class="button-item"><a href="Guide.html"><img src="guide.png" alt="Гайд"><span class="button-label">Гайд</span></a></div>
                 <div class="button-item"><a href="https://2gis.kz/almaty/inside/9430047375024031/firm/70000001065238061/tab/reviews?m=76.902419%2C43.237714%2F16"><img src="say.png" alt="Отзыв"><span class="button-label">Отзыв</span></a></div>
@@ -316,8 +429,31 @@
                 <div class="button-item"><a href="https://wa.me/77753181260" target="_blank"><img src="whats.png" alt="WhatsApp"><span class="button-label">What's app</span></a></div>
                 <div class="button-item"><a href="#"><img src="face.png" alt="Facebook"><span class="button-label">FaceBook</span></a></div>
             </div>
+
             <div style="margin-top: 20px;">
-                <div class="banner" data-title="Наши преимущества" data-content="Профессиональные консультации и индивидуальный подход к каждому клиенту">
+                <div class="bannr" data-title="Наши преимущества" data-content='
+                    <h4>Почему выбирают нас:</h4>
+                    <ul>
+                        <li>Более 10 лет на рынке</li>
+                        <li>5000+ довольных клиентов</li>
+                        <li>Персональный менеджер</li>
+                    </ul>
+                    <div class="carousel-container">
+                        <button class="carousel-button prev">❮</button>
+                        <button class="carousel-button next">❯</button>
+                        <div class="carousel-slide">
+                            <img src="office1.jpg" class="carousel-image" alt="Офис 1">
+                            <img src="office2.jpg" class="carousel-image" alt="Офис 2">
+                            <img src="team1.jpg" class="carousel-image" alt="Команда 1">
+                            <img src="team2.jpg" class="carousel-image" alt="Команда 2">
+                            <img src="client1.jpg" class="carousel-image" alt="Клиент 1">
+                            <img src="client2.jpg" class="carousel-image" alt="Клиент 2">
+                            <img src="award1.jpg" class="carousel-image" alt="Награда 1">
+                            <img src="award2.jpg" class="carousel-image" alt="Награда 2">
+                        </div>
+                    </div>
+                    <a href="https://example.com/gallery" class="modal-link">Смотреть все фото →</a>
+                '>
                     <img src="Текст абзаца.png" width="735" height="400" alt="Баннер">
                 </div>
             </div>
@@ -328,15 +464,66 @@
     <!-- Страница 2 -->
     <div class="container" id="page-2">
         <div class="scrollable-content">
-            <div class="banner" data-title="Ипотечные программы" data-content="Специальные условия по ипотеке для наших клиентов">
+            <div class="banner" data-title="Ипотечные программы" data-content='
+                <div class="info-box">
+                    <h4>Специальные условия по ипотеке</h4>
+                    <ul>
+                        <li>Первоначальный взнос от 15%</li>
+                        <li>Срок кредита до 25 лет</li>
+                        <li>Льготные ставки для молодых семей</li>
+                    </ul>
+                </div>
+                <div class="feature-grid">
+                    <div class="feature-item">
+                        <img src="home.png" alt="Ипотека">
+                        <p>Ипотека на новостройки</p>
+                    </div>
+                    <div class="feature-item">
+                        <img src="renovation.png" alt="Ремонт">
+                        <p>Ипотека с ремонтом</p>
+                    </div>
+                </div>
+            '>
                 <img src="ban1.png" width="735" height="400" alt="Баннер">
             </div>
+
             <div style="margin-top: 20px;">
-                <div class="banner" data-title="Акции" data-content="Специальные предложения этого месяца">
+                <div class="banner" data-title="Акции" data-content='
+                    <h4>Специальные предложения</h4>
+                    <ul>
+                        <li>Сниженная ставка для IT-специалистов</li>
+                        <li>Бесплатная страховка при оформлении онлайн</li>
+                        <li>Кэшбэк 1% за досрочное погашение</li>
+                    </ul>
+                    <div class="carousel-container">
+                        <button class="carousel-button prev">❮</button>
+                        <button class="carousel-button next">❯</button>
+                        <div class="carousel-slide">
+                            <img src="all.JPG" class="carousel-image" alt="Акция 1">
+                            <img src="shef.JPG" class="carousel-image" alt="Акция 2">
+                            <img src="kana.JPG" class="carousel-image" alt="Акция 3">
+                            <img src="salta.JPG" class="carousel-image" alt="Акция 4">
+                            <img src="di.JPG" class="carousel-image" alt="Акция 5">
+                            <img src="tolk.JPG" class="carousel-image" alt="Акция 6">
+                            <img src="din.JPG" class="carousel-image" alt="Акция 7">
+                            <img src="ily.JPG" class="carousel-image" alt="Акция 8">
+                        </div>
+                    </div>
+                    <a href="#promotions" class="modal-link">Все акции →</a>
+                '>
                     <img src="baner2.jpeg" width="735" height="400" alt="Баннер">
                 </div>
+
                 <div style="margin-top: 20px;">
-                    <div class="banner" data-title="Калькулятор" data-content="Рассчитайте условия кредита онлайн">
+                    <div class="banner" data-title="Калькулятор" data-content='
+                        <h4>Онлайн-калькулятор</h4>
+                        <ul>
+                            <li>Рассчитайте ежемесячный платеж</li>
+                            <li>Сравните разные программы</li>
+                            <li>Получите персональное предложение</li>
+                        </ul>
+                        <a href="calc.html" class="modal-link">Перейти к калькулятору →</a>
+                    '>
                         <img src="ban3.jpeg" width="735" height="400" alt="Баннер">
                     </div>
                 </div>
@@ -383,14 +570,56 @@
                 3: {title: 'Чат с ИИ', element: document.getElementById('page-3')}
             };
 
-            // Обработчики для модального окна
+            // Карусель
+            let currentSlide = 0;
+            let carouselInitialized = false;
+
+            function initCarousel() {
+                currentSlide = 0;
+                const slideWidth = document.querySelector('.carousel-image')?.clientWidth;
+                if (slideWidth) {
+                    document.querySelector('.carousel-slide').style.transform = `translateX(0)`;
+                    carouselInitialized = true;
+                }
+            }
+
+            function nextSlide() {
+                if (currentSlide < 7) {
+                    currentSlide++;
+                    updateCarousel();
+                }
+            }
+
+            function prevSlide() {
+                if (currentSlide > 0) {
+                    currentSlide--;
+                    updateCarousel();
+                }
+            }
+
+            function updateCarousel() {
+                const slideWidth = document.querySelector('.carousel-image').clientWidth;
+                document.querySelector('.carousel-slide').style.transform = `translateX(-${currentSlide * slideWidth}px)`;
+            }
+
+            // Модальные окна
             document.querySelectorAll('.banner').forEach(banner => {
                 banner.addEventListener('click', () => {
                     const title = banner.dataset.title;
                     const content = banner.dataset.content;
                     
                     document.getElementById('modal-title').textContent = title;
-                    document.getElementById('modal-content').textContent = content;
+                    document.getElementById('modal-content').innerHTML = content;
+                    
+                    if (content.includes('carousel-container')) {
+                        initCarousel();
+                        document.querySelectorAll('.carousel-button.next').forEach(btn => {
+                            btn.addEventListener('click', nextSlide);
+                        });
+                        document.querySelectorAll('.carousel-button.prev').forEach(btn => {
+                            btn.addEventListener('click', prevSlide);
+                        });
+                    }
                     
                     document.getElementById('modal-overlay').style.display = 'block';
                     document.getElementById('modal').classList.add('active');
@@ -412,7 +641,7 @@
                 e.stopPropagation();
             });
 
-            // Остальной исходный JavaScript код
+            // Остальной код
             const chatMessages = document.getElementById('chat-messages');
             const userInput = document.getElementById('user-input');
             const sendButton = document.getElementById('send-button');
