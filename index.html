@@ -3,7 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>iOS Style Dashboard</title>
+    <title>Ultimate iOS Style Dashboard</title>
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <link rel="manifest" href="/manifest.webmanifest">
     <style>
         :root {
             --bg-color: #ffffff;
@@ -11,8 +13,12 @@
             --card-bg: #f2f2f7;
             --border-color: #d1d1d6;
             --primary: #007aff;
+            --primary-hover: #0063cc;
             --text-secondary: #8e8e93;
             --highlight: rgba(0,0,0,0.1);
+            --success: #34c759;
+            --warning: #ff9500;
+            --error: #ff3b30;
         }
 
         [data-theme="dark"] {
@@ -34,6 +40,7 @@
         body {
             background: var(--bg-color);
             color: var(--text-color);
+            transition: background 0.3s ease;
         }
 
         .container {
@@ -44,6 +51,7 @@
             box-shadow: 0 0 30px rgba(0,0,0,0.1);
         }
 
+        /* Header Styles */
         .header {
             padding: 2rem 1rem 1rem;
             display: flex;
@@ -52,6 +60,7 @@
             background: var(--card-bg);
             border-radius: 0 0 20px 20px;
             box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+            position: relative;
         }
 
         .avatar {
@@ -59,16 +68,58 @@
             height: 50px;
             border-radius: 12px;
             object-fit: cover;
+            border: 2px solid var(--primary);
         }
 
+        /* Premium Banner */
+        .premium-banner {
+            background: linear-gradient(135deg, #ff9f0a, #ff375f);
+            color: white;
+            padding: 1rem;
+            margin: 1rem;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            animation: slideUp 0.5s ease;
+        }
+
+        .premium-banner button {
+            background: rgba(255,255,255,0.2);
+            border: none;
+            padding: 8px 20px;
+            border-radius: 20px;
+            color: white;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .premium-banner button:active {
+            transform: scale(0.95);
+        }
+
+        /* Section Styles */
         .section {
-            margin: 2rem 1rem;
+            margin: 1rem;
             background: var(--card-bg);
             border-radius: 12px;
             padding: 1rem;
             box-shadow: 0 2px 10px rgba(0,0,0,0.05);
         }
 
+        .section-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1rem;
+        }
+
+        .section-title {
+            font-size: 1.2rem;
+            font-weight: 600;
+        }
+
+        /* List Items */
         .list-item {
             padding: 1rem;
             display: flex;
@@ -76,7 +127,9 @@
             gap: 1rem;
             border-bottom: 1px solid var(--border-color);
             cursor: pointer;
-            transition: background 0.2s;
+            transition: all 0.2s;
+            text-decoration: none;
+            color: inherit;
         }
 
         .list-item:active {
@@ -87,6 +140,84 @@
             border-bottom: none;
         }
 
+        /* Buttons */
+        .button {
+            background: var(--primary);
+            color: white;
+            padding: 12px 24px;
+            border-radius: 25px;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            font-weight: 500;
+            transition: all 0.2s;
+            border: none;
+            cursor: pointer;
+        }
+
+        .button:hover {
+            background: var(--primary-hover);
+        }
+
+        .button:active {
+            transform: scale(0.95);
+        }
+
+        .button-outline {
+            background: transparent;
+            border: 1px solid var(--primary);
+            color: var(--primary);
+        }
+
+        .button-icon {
+            padding: 10px;
+            border-radius: 50%;
+        }
+
+        /* Stats Grid */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 1rem;
+            margin-top: 1rem;
+        }
+
+        .stat-card {
+            background: var(--card-bg);
+            padding: 1rem;
+            border-radius: 12px;
+            text-align: center;
+            transition: transform 0.2s;
+        }
+
+        .stat-card:active {
+            transform: scale(0.98);
+        }
+
+        .stat-value {
+            font-size: 1.5rem;
+            font-weight: bold;
+            margin: 0.5rem 0;
+            color: var(--primary);
+        }
+
+        /* Progress Bar */
+        .progress-bar {
+            height: 6px;
+            background: rgba(0,0,0,0.1);
+            border-radius: 3px;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: var(--primary);
+            width: 65%;
+            transition: width 0.3s ease;
+        }
+
+        /* Tab Bar */
         .tab-bar {
             position: fixed;
             bottom: 0;
@@ -97,6 +228,7 @@
             padding: 1rem 0;
             background: var(--card-bg);
             border-top: 1px solid var(--border-color);
+            backdrop-filter: blur(10px);
         }
 
         .tab-item {
@@ -108,12 +240,14 @@
             font-size: 0.8rem;
             cursor: pointer;
             transition: color 0.2s;
+            text-decoration: none;
         }
 
         .tab-item.active {
             color: var(--primary);
         }
 
+        /* Theme Toggle */
         .theme-toggle {
             position: fixed;
             top: 1rem;
@@ -124,218 +258,309 @@
             border: none;
             color: var(--text-color);
             cursor: pointer;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
         }
-		.page {
-		            display: none;
-		            animation: fadeIn 0.3s ease;
-		        }
-        
-		        .page.active {
-		            display: block;
-		        }
-        
-		        @keyframes fadeIn {
-		            from { opacity: 0; transform: translateY(10px); }
-		            to { opacity: 1; transform: translateY(0); }
-		        }
-        
-		        .button {
-		            background: var(--primary);
-		            color: white;
-		            padding: 12px 24px;
-		            border-radius: 25px;
-		            text-decoration: none;
-		            display: inline-block;
-		            font-weight: 500;
-		            transition: transform 0.1s;
-		        }
-        
-		        .button:active {
-		            transform: scale(0.95);
-		        }
-        
-		        .stats-grid {
-		            display: grid;
-		            grid-template-columns: repeat(2, 1fr);
-		            gap: 1rem;
-		            margin-top: 1rem;
-		        }
-        
-		        .stat-card {
-		            background: var(--card-bg);
-		            padding: 1rem;
-		            border-radius: 12px;
-		            text-align: center;
-		        }
-		    </style>
-		</head>
-		<body>
-		    <button class="theme-toggle" onclick="toggleTheme()">🌓</button>
+
+        /* Animations */
+        @keyframes slideUp {
+            from { transform: translateY(20px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .page {
+            display: none;
+            animation: fadeIn 0.3s ease;
+        }
+
+        .page.active {
+            display: block;
+        }
+
+        /* Floating Action Button */
+        .fab {
+            position: fixed;
+            bottom: 80px;
+            right: 20px;
+            background: var(--primary);
+            width: 56px;
+            height: 56px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .fab:active {
+            transform: scale(0.9);
+        }
+
+        /* Notification Badge */
+        .badge {
+            background: var(--error);
+            color: white;
+            padding: 4px 8px;
+            border-radius: 10px;
+            font-size: 0.7rem;
+            margin-left: auto;
+        }
+
+        /* Switch */
+        .switch {
+            position: relative;
+            display: inline-block;
+            width: 44px;
+            height: 24px;
+            margin-left: auto;
+        }
+
+        .switch input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+
+        .slider {
+            position: absolute;
+            cursor: pointer;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: #ccc;
+            transition: .4s;
+            border-radius: 34px;
+        }
+
+        .slider:before {
+            position: absolute;
+            content: "";
+            height: 20px;
+            width: 20px;
+            left: 2px;
+            bottom: 2px;
+            background: white;
+            transition: .4s;
+            border-radius: 50%;
+        }
+
+        input:checked + .slider {
+            background: var(--primary);
+        }
+
+        input:checked + .slider:before {
+            transform: translateX(20px);
+        }
+    </style>
+</head>
+<body>
+    <button class="theme-toggle" onclick="toggleTheme()">🌓</button>
+    <div class="fab" onclick="showNewFeature()">
+        <img src="https://cdn.jsdelivr.net/npm/feather-icons/dist/icons/plus.svg" width="24" style="filter: invert(1);">
+    </div>
     
-		    <div class="container">
-		        <!-- Страница профиля -->
-		        <div class="page active" id="profile">
-		            <header class="header">
-		                <img src="https://i.pravatar.cc/100" class="avatar" alt="Avatar">
-		                <div>
-		                    <h2>John Doe</h2>
-		                    <p style="color: var(--text-secondary)">Premium member</p>
-		                </div>
-		            </header>
+    <div class="container">
+        <!-- Profile Page -->
+        <div class="page active" id="profile">
+            <header class="header">
+                <img src="https://i.pravatar.cc/100" class="avatar" alt="Avatar">
+                <div>
+                    <h2>John Doe</h2>
+                    <p style="color: var(--text-secondary)">Premium member</p>
+                </div>
+                <span class="badge">PRO</span>
+            </header>
 
-		            <section class="section">
-		                <a href="#security" class="list-item">
-		                    <img src="https://cdn.jsdelivr.net/npm/feather-icons/dist/icons/shield.svg" width="24">
-		                    <div>
-		                        <h3>Security</h3>
-		                        <p style="color: var(--text-secondary)">Password and 2FA</p>
-		                    </div>
-		                </a>
-		                <a href="#notifications" class="list-item">
-		                    <img src="https://cdn.jsdelivr.net/npm/feather-icons/dist/icons/bell.svg" width="24">
-		                    <div>
-		                        <h3>Notifications</h3>
-		                        <p style="color: var(--text-secondary)">3 new notifications</p>
-		                    </div>
-		                </a>
-		                <a href="#payment" class="list-item">
-		                    <img src="https://cdn.jsdelivr.net/npm/feather-icons/dist/icons/credit-card.svg" width="24">
-		                    <div>
-		                        <h3>Payment Methods</h3>
-		                        <p style="color: var(--text-secondary)">2 cards connected</p>
-		                    </div>
-		                </a>
-		            </section>
+            <div class="premium-banner">
+                <img src="https://cdn.jsdelivr.net/npm/feather-icons/dist/icons/zap.svg" width="32">
+                <div>
+                    <h3>Premium Features</h3>
+                    <p>Unlock all features with Premium</p>
+                </div>
+                <button>Upgrade</button>
+            </div>
 
-		            <section class="section">
-		                <h3 style="margin-bottom: 1rem;">Quick Actions</h3>
-		                <div class="stats-grid">
-		                    <a href="#rewards" class="stat-card">
-		                        <h4>🎁 Rewards</h4>
-		                        <p style="color: var(--primary)">245 Points</p>
-		                    </a>
-		                    <a href="#storage" class="stat-card">
-		                        <h4>📦 Storage</h4>
-		                        <p style="color: var(--primary)">64% Used</p>
-		                    </a>
-		                </div>
-		            </section>
-		        </div>
+            <section class="section">
+                <div class="section-header">
+                    <h3 class="section-title">Quick Actions</h3>
+                    <a href="#more" class="button-outline button">View All</a>
+                </div>
+                <div class="stats-grid">
+                    <a href="#storage" class="stat-card">
+                        <h4>📦 Storage</h4>
+                        <div class="progress-bar">
+                            <div class="progress-fill"></div>
+                        </div>
+                        <div class="stat-value">65%</div>
+                    </a>
+                    <a href="#rewards" class="stat-card">
+                        <h4>🎁 Rewards</h4>
+                        <div class="stat-value">1,240</div>
+                        <p>Points Available</p>
+                    </a>
+                </div>
+            </section>
 
-		        <!-- Страница статистики -->
-		        <div class="page" id="stats">
-		            <header class="header">
-		                <h2>Activity Stats</h2>
-		            </header>
+            <section class="section">
+                <a href="#security" class="list-item">
+                    <img src="https://cdn.jsdelivr.net/npm/feather-icons/dist/icons/shield.svg" width="24">
+                    <div>
+                        <h3>Security</h3>
+                        <p style="color: var(--text-secondary)">Password and 2FA</p>
+                    </div>
+                    <span class="badge">2 Active</span>
+                </a>
+                <a href="#notifications" class="list-item">
+                    <img src="https://cdn.jsdelivr.net/npm/feather-icons/dist/icons/bell.svg" width="24">
+                    <div>
+                        <h3>Notifications</h3>
+                        <p style="color: var(--text-secondary)">3 new notifications</p>
+                    </div>
+                </a>
+                <a href="#payment" class="list-item">
+                    <img src="https://cdn.jsdelivr.net/npm/feather-icons/dist/icons/credit-card.svg" width="24">
+                    <div>
+                        <h3>Payment Methods</h3>
+                        <p style="color: var(--text-secondary)">2 cards connected</p>
+                    </div>
+                </a>
+            </section>
+        </div>
 
-		            <section class="section">
-		                <div class="list-item">
-		                    <img src="https://cdn.jsdelivr.net/npm/feather-icons/dist/icons/bar-chart-2.svg" width="24">
-		                    <div>
-		                        <h3>Weekly Report</h3>
-		                        <p style="color: var(--text-secondary)">23% increase</p>
-		                    </div>
-		                </div>
-		                <div class="list-item">
-		                    <img src="https://cdn.jsdelivr.net/npm/feather-icons/dist/icons/trending-up.svg" width="24">
-		                    <div>
-		                        <h3>Monthly Growth</h3>
-		                        <p style="color: var(--text-secondary)">1.2M visits</p>
-		                    </div>
-		                </div>
-		            </section>
+        <!-- Settings Page -->
+        <div class="page" id="settings">
+            <header class="header">
+                <h2>Settings</h2>
+            </header>
 
-		            <section class="section">
-		                <h3>Export Data</h3>
-		                <a href="#" class="button" style="margin-top: 1rem;">
-		                    Download Report
-		                </a>
-		            </section>
-		        </div>
+            <section class="section">
+                <div class="list-item" onclick="toggleTheme()">
+                    <img src="https://cdn.jsdelivr.net/npm/feather-icons/dist/icons/moon.svg" width="24">
+                    <div>
+                        <h3>Dark Mode</h3>
+                        <p style="color: var(--text-secondary)">System default</p>
+                    </div>
+                    <label class="switch">
+                        <input type="checkbox" id="themeSwitch">
+                        <span class="slider"></span>
+                    </label>
+                </div>
+                <a href="#privacy" class="list-item">
+                    <img src="https://cdn.jsdelivr.net/npm/feather-icons/dist/icons/lock.svg" width="24">
+                    <div>
+                        <h3>Privacy</h3>
+                        <p style="color: var(--text-secondary)">Data permissions</p>
+                    </div>
+                </a>
+                <a href="#support" class="list-item">
+                    <img src="https://cdn.jsdelivr.net/npm/feather-icons/dist/icons/life-buoy.svg" width="24">
+                    <div>
+                        <h3>Support</h3>
+                        <p style="color: var(--text-secondary)">Help center</p>
+                    </div>
+                </a>
+            </section>
 
-		        <!-- Страница настроек -->
-		        <div class="page" id="settings">
-		            <header class="header">
-		                <h2>Settings</h2>
-		            </header>
+            <section class="section">
+                <h3 class="section-title">Account</h3>
+                <button class="button" style="width: 100%; margin-top: 1rem;">
+                    <img src="https://cdn.jsdelivr.net/npm/feather-icons/dist/icons/log-out.svg" width="18">
+                    Log Out
+                </button>
+                <button class="button-outline button" style="width: 100%; margin-top: 1rem;">
+                    Delete Account
+                </button>
+            </section>
+        </div>
 
-		            <section class="section">
-		                <div class="list-item" onclick="toggleTheme()">
-		                    <img src="https://cdn.jsdelivr.net/npm/feather-icons/dist/icons/moon.svg" width="24">
-		                    <div>
-		                        <h3>Dark Mode</h3>
-		                        <p style="color: var(--text-secondary)">System default</p>
-		                    </div>
-		                </div>
-		                <a href="#privacy" class="list-item">
-		                    <img src="https://cdn.jsdelivr.net/npm/feather-icons/dist/icons/lock.svg" width="24">
-		                    <div>
-		                        <h3>Privacy</h3>
-		                        <p style="color: var(--text-secondary)">Data permissions</p>
-		                    </div>
-		                </a>
-		                <a href="#support" class="list-item">
-		                    <img src="https://cdn.jsdelivr.net/npm/feather-icons/dist/icons/life-buoy.svg" width="24">
-		                    <div>
-		                        <h3>Support</h3>
-		                        <p style="color: var(--text-secondary)">Help center</p>
-		                    </div>
-		                </a>
-		            </section>
-		        </div>
+        <!-- Navigation -->
+        <nav class="tab-bar">
+            <a href="#profile" class="tab-item active" onclick="switchPage('profile')">
+                <img src="https://cdn.jsdelivr.net/npm/feather-icons/dist/icons/home.svg" width="24">
+                Home
+            </a>
+            <a href="#stats" class="tab-item" onclick="switchPage('stats')">
+                <img src="https://cdn.jsdelivr.net/npm/feather-icons/dist/icons/activity.svg" width="24">
+                Stats
+            </a>
+            <a href="#settings" class="tab-item" onclick="switchPage('settings')">
+                <img src="https://cdn.jsdelivr.net/npm/feather-icons/dist/icons/settings.svg" width="24">
+                Settings
+            </a>
+        </nav>
+    </div>
 
-		        <!-- Навигация -->
-		        <nav class="tab-bar">
-		            <a href="#profile" class="tab-item active" onclick="switchPage('profile')">
-		                <img src="https://cdn.jsdelivr.net/npm/feather-icons/dist/icons/user.svg" width="24">
-		                Profile
-		            </a>
-		            <a href="#stats" class="tab-item" onclick="switchPage('stats')">
-		                <img src="https://cdn.jsdelivr.net/npm/feather-icons/dist/icons/activity.svg" width="24">
-		                Stats
-		            </a>
-		            <a href="#settings" class="tab-item" onclick="switchPage('settings')">
-		                <img src="https://cdn.jsdelivr.net/npm/feather-icons/dist/icons/settings.svg" width="24">
-		                Settings
-		            </a>
-		        </nav>
-		    </div>
+    <script>
+        // Theme Management
+        function toggleTheme() {
+            const newTheme = document.body.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
+            document.body.setAttribute('data-theme', newTheme);
+            localStorage.setItem('theme', newTheme);
+            document.getElementById('themeSwitch').checked = newTheme === 'dark';
+        }
 
-		    <script>
-		        // Обновленный функционал переключения страниц
-		        function switchPage(pageId) {
-		            document.querySelectorAll('.page').forEach(page => {
-		                page.classList.remove('active');
-		            });
-		            document.getElementById(pageId).classList.add('active');
+        // Page Navigation
+        function switchPage(pageId) {
+            document.querySelectorAll('.page').forEach(page => page.classList.remove('active'));
+            document.getElementById(pageId).classList.add('active');
+            document.querySelectorAll('.tab-item').forEach(tab => tab.classList.remove('active'));
+            document.querySelector(`[href="#${pageId}"]`).classList.add('active');
+            window.history.pushState({}, '', `#${pageId}`);
+        }
+
+        // Initialization
+        window.addEventListener('DOMContentLoaded', () => {
+            const savedTheme = localStorage.getItem('theme') || 'light';
+            document.body.setAttribute('data-theme', savedTheme);
+            document.getElementById('themeSwitch').checked = savedTheme === 'dark';
             
-		            document.querySelectorAll('.tab-item').forEach(tab => {
-		                tab.classList.remove('active');
-		            });
-		            document.querySelector(`[href="#${pageId}"]`).classList.add('active');
-		        }
+            if(window.location.hash) {
+                switchPage(window.location.hash.substring(1));
+            }
+        });
 
-		        // Обработка якорных ссылок
-		        window.addEventListener('hashchange', function() {
-		            const pageId = window.location.hash.substring(1);
-		            if (pageId) switchPage(pageId);
-		        });
+        // FAB Action
+        function showNewFeature() {
+            alert('🎉 New Feature Coming Soon!');
+        }
 
-		        // Имитация загрузки данных
-		        window.addEventListener('DOMContentLoaded', () => {
-		            if(window.location.hash) {
-		                switchPage(window.location.hash.substring(1));
-		            }
-		        });
+        // Switch Theme Synchronization
+        document.getElementById('themeSwitch').addEventListener('change', toggleTheme);
 
-		        // Добавим функционал для кнопок
-		        document.querySelectorAll('a[href^="#"]').forEach(link => {
-		            link.addEventListener('click', function(e) {
-		                e.preventDefault();
-		                const pageId = this.getAttribute('href').substring(1);
-		                switchPage(pageId);
-		            });
-		        });
-		    </script>
-		</body>
-		</html>
+        // Handle Back/Forward Navigation
+        window.addEventListener('popstate', () => {
+            const pageId = window.location.hash.substring(1);
+            if (pageId) switchPage(pageId);
+        });
+
+        // Add Ripple Effect
+        document.querySelectorAll('.button, .list-item').forEach(button => {
+            button.addEventListener('click', function(e) {
+                const ripple = document.createElement('div');
+                ripple.style.position = 'absolute';
+                ripple.style.width = '20px';
+                ripple.style.height = '20px';
+                ripple.style.background = 'rgba(255,255,255,0.5)';
+                ripple.style.borderRadius = '50%';
+                ripple.style.transform = 'translate(-50%, -50%)';
+                ripple.style.pointerEvents = 'none';
+                ripple.style.animation = 'ripple 0.6s linear';
+                
+                const rect = this.getBoundingClientRect();
+                ripple.style.left = `${e.clientX - rect.left}px`;
+                ripple.style.top = `${e.clientY - rect.top}px`;
+                
+                this.appendChild(ripple);
+                setTimeout(() => ripple.remove(), 600);
+            });
+        });
+    </script>
+</body>
+</html>
