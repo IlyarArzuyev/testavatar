@@ -4,13 +4,24 @@
     <meta charset="UTF-8">
     <title>Jusan Mobile Pro</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons+Round" rel="stylesheet">
     <style>
         :root {
             --primary-color: #1A237E;
             --accent-color: #4CAF50;
-            --background: linear-gradient(180deg, #F5F5F6 0%, #E8EAF6 100%);
-            --shadow: 0 8px 24px rgba(0,0,0,0.08);
+            --background: linear-gradient(180deg, #f8f9fa 0%, #e9ecef 100%);
+            --shadow: 0 12px 32px rgba(0,0,0,0.1);
+            --surface: rgba(255, 255, 255, 0.98);
+            --overlay: rgba(0,0,0,0.4);
+        }
+
+        * {
+            -webkit-user-select: none;
+            -moz-user-select: none;
+            -ms-user-select: none;
+            user-select: none;
+            -webkit-tap-highlight-color: transparent;
+            box-sizing: border-box;
         }
 
         body {
@@ -18,42 +29,49 @@
             margin: 0;
             background: var(--background);
             min-height: 100vh;
+            overscroll-behavior-y: contain;
+            padding-bottom: 80px;
+            touch-action: manipulation;
         }
 
         .header {
             background: var(--primary-color);
             color: white;
             padding: 24px 16px;
+            position: sticky;
+            top: 0;
+            z-index: 100;
             box-shadow: var(--shadow);
+            backdrop-filter: blur(12px);
+        }
+
+        .page {
+            display: none;
+            opacity: 0;
+            transform: translateY(20px);
+            animation: pageEnter 0.4s ease forwards;
+        }
+
+        @keyframes pageEnter {
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .page.active { display: block; }
+
+        .button {
+            background: var(--surface);
+            border-radius: 20px;
+            padding: 20px;
+            cursor: pointer;
+            transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+            box-shadow: var(--shadow);
+            border: none;
+            text-align: center;
             position: relative;
             overflow: hidden;
         }
 
-        .header::after {
-            content: '';
-            position: absolute;
-            bottom: -20px;
-            left: -10%;
-            width: 120%;
-            height: 40px;
-            background: white;
-            border-radius: 24px;
-            transform: rotate(-2deg);
-        }
-
-        .user-info {
-            display: flex;
-            align-items: center;
-            gap: 16px;
-        }
-
-        .avatar {
-            width: 48px;
-            height: 48px;
-            border-radius: 50%;
-            object-fit: cover;
-            border: 2px solid rgba(255,255,255,0.2);
-        }
+        .button:active { transform: scale(0.97); }
 
         .account-card {
             background: linear-gradient(135deg, var(--primary-color) 0%, #303F9F 100%);
@@ -62,32 +80,14 @@
             margin: 24px 16px;
             color: white;
             box-shadow: var(--shadow);
-            transition: transform 0.3s ease;
+            position: relative;
+            overflow: hidden;
         }
 
-        .quick-actions {
+        .grid {
             display: grid;
-            grid-template-columns: repeat(4, 1fr);
             gap: 16px;
             padding: 0 16px;
-            margin-top: 32px;
-        }
-
-        .action-button {
-            text-align: center;
-            padding: 16px;
-            background: rgba(255,255,255,0.9);
-            backdrop-filter: blur(8px);
-            border-radius: 16px;
-            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-            cursor: pointer;
-            border: 1px solid rgba(0,0,0,0.05);
-        }
-
-        .action-icon {
-            font-size: 24px;
-            color: var(--primary-color);
-            margin-bottom: 8px;
         }
 
         .offer-slider {
@@ -95,161 +95,219 @@
             overflow-x: auto;
             padding: 16px;
             gap: 16px;
-            scroll-snap-type: x mandatory;
+            margin: 24px 0;
         }
 
-        .offer-card {
-            flex: 0 0 80%;
-            background: white;
+        .bottom-nav {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: var(--surface);
+            display: flex;
+            justify-content: space-around;
+            padding: 16px 0;
+            box-shadow: 0 -12px 32px rgba(0,0,0,0.08);
+            border-radius: 24px 24px 0 0;
+        }
+
+        /* Новые стили для второй страницы */
+        .banners-grid {
+            display: grid;
+            gap: 20px;
+            padding: 16px;
+            grid-template-columns: 1fr;
+        }
+
+        .banner-card {
+            height: 200px;
+            border-radius: 24px;
+            background-size: cover;
+            background-position: center;
+            position: relative;
+            overflow: hidden;
+            transition: transform 0.3s ease;
+        }
+
+        .banner-card:active { transform: scale(0.98); }
+
+        /* Модальное окно */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: var(--overlay);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+            animation: fadeIn 0.3s ease;
+        }
+
+        .modal-content {
+            background: var(--surface);
+            width: 90%;
+            max-width: 400px;
             border-radius: 24px;
             padding: 24px;
-            scroll-snap-align: start;
-            box-shadow: var(--shadow);
-            position: relative;
+            transform: scale(0.9);
+            animation: modalOpen 0.3s ease forwards;
         }
 
-        .offer-badge {
-            position: absolute;
-            top: 16px;
-            right: -30px;
-            background: var(--accent-color);
-            color: white;
-            padding: 6px 40px;
-            transform: rotate(45deg);
-            font-size: 12px;
+        @keyframes modalOpen {
+            to { transform: scale(1); }
         }
 
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(20px); }
-            to { opacity: 1; transform: translateY(0); }
+        /* Иконки и типографика */
+        .material-icons-round {
+            font-size: 32px;
+            color: var(--primary-color);
         }
 
-        .animated {
-            animation: fadeIn 0.6s ease forwards;
-        }
-
-        ::-webkit-scrollbar {
-            height: 6px;
+        a {
+            text-decoration: none;
+            color: inherit;
         }
     </style>
 </head>
 <body>
-    <div class="header animated">
-        <div style="display: flex; justify-content: space-between; align-items: center;">
-            <div class="user-info">
-                <img id="user-avatar" class="avatar" src="" alt="Avatar">
-                <div>
-                    <div id="user-name" style="font-size: 20px; font-weight: 500;"></div>
-                    <div id="user-username" style="font-size: 14px; opacity: 0.9;"></div>
-                </div>
-            </div>
-            <span class="material-icons">settings</span>
-        </div>
-    </div>
-
-    <div class="account-card animated">
+    <div class="header">
         <div style="display: flex; justify-content: space-between; align-items: center;">
             <div>
-                <div style="font-size: 12px; opacity: 0.8;">Основной счет</div>
-                <div style="font-size: 32px; font-weight: 700; margin: 8px 0;">1 234 567 ₸</div>
-                <div style="font-size: 14px;">•• 4455</div>
+                <div style="font-size: 14px; opacity: 0.9;">Добро пожаловать</div>
+                <div id="username" style="font-size: 20px; font-weight: 500;"></div>
             </div>
-            <div style="background: rgba(255,255,255,0.2); padding: 8px; border-radius: 12px;">
-                <span class="material-icons">credit_card</span>
-            </div>
+            <img id="user-photo" style="width: 40px; height: 40px; border-radius: 50%;">
         </div>
     </div>
 
-    <div class="quick-actions">
-        <div class="action-button animated">
-            <span class="material-icons action-icon">swap_horiz</span>
-            <div>Переводы</div>
-        </div>
-        <div class="action-button animated">
-            <span class="material-icons action-icon">payments</span>
-            <div>Платежи</div>
-        </div>
-        <div class="action-button animated">
-            <span class="material-icons action-icon">qr_code</span>
-            <div>QR-код</div>
-        </div>
-        <div class="action-button animated">
-            <span class="material-icons action-icon">savings</span>
-            <div>Вклады</div>
-        </div>
-    </div>
-
-    <div class="offer-slider">
-        <div class="offer-card animated">
-            <div class="offer-badge">Акция</div>
-            <h3 style="margin: 0 0 16px;">Все для дома!</h3>
-            <div style="display: flex; gap: 12px; align-items: center;">
-                <span class="material-icons" style="color: var(--accent-color);">local_offer</span>
+    <!-- Главная страница -->
+    <div id="home-page" class="page active">
+        <div class="account-card">
+            <div style="display: flex; justify-content: space-between; align-items: center;">
                 <div>
-                    <div style="font-size: 18px; font-weight: 500;">До 15% кэшбэк</div>
-                    <div style="font-size: 14px; color: #666;">На товары для дома</div>
+                    <div style="font-size: 12px; opacity: 0.8;"></div>
+                    <div style="font-size: 32px; font-weight: 700; margin: 8px 0;">Expert Credit</div>
+                    <div style="font-size: 14px;">• • •</div>
+                </div>
+                <div class="button" style="background: rgba(255,255,255,0.2);">
+                    <span class="material-icons-round">real_estate_agent</span>
                 </div>
             </div>
         </div>
 
-        <div class="offer-card animated">
-            <div class="offer-badge">Новое</div>
-            <h3 style="margin: 0 0 16px;">Travel</h3>
-            <div style="display: flex; gap: 12px; align-items: center;">
-                <span class="material-icons" style="color: var(--accent-color);">flight</span>
-                <div>
-                    <div style="font-size: 18px; font-weight: 500;">+500 миль</div>
-                    <div style="font-size: 14px; color: #666;">За бронирование отелей</div>
-                </div>
+        <div class="grid" style="grid-template-columns: repeat(2, 1fr);">
+            <a href="https://example.com/transfer" class="button">
+                <span class="material-icons-round">attach_file</span>
+                <div>Гайд</div>
+            </a>
+            <a href="https://example.com/payment" class="button">
+                <span class="material-icons-round">star_rate</span>
+                <div>Отзыв</div>
+            </a>
+            <a href="https://example.com/qr" class="button">
+                <span class="material-icons-round">done_all</span>
+                <div>Оценка эксперта</div>
+            </a>
+            <a href="https://example.com/deposit" class="button">
+                <span class="material-icons-round">payment</span>
+                <div>Оплата</div>
+            </a>
+        </div>
+
+        <div class="offer-slider">
+            <div class="banner-card" style="aspect-ratio: 2/1; min-width: 80%; background-image: url('ban1.png')"></div>
+            <div class="banner-card" style="aspect-ratio: 2/1; min-width: 80%; background-image: url('baner2.jpeg')"></div>
+        </div>
+    </div>
+
+    <!-- Страница истории и баннеров -->
+    <div id="history-page" class="page">
+        <div class="banners-grid">
+            <div class="banner-card" 
+                 style="background-image: url('ban1.png')"
+                 onclick="showModal('Акция', 'Получайте двойной кэшбэк за покупки в партнерских магазинах до 30 сентября', '15% кэшбэк')">
+            </div>
+            <div class="banner-card" 
+                 style="background-image: url('baner2.jpeg')"
+                 onclick="showModal('Новый вклад', 'Откройте вклад под 12% годовых с возможностью пополнения', 'до 12% годовых')">
+            </div>
+            <div class="banner-card" 
+                 style="background-image: url('ban3.jpeg')"
+                 onclick="showModal('Страхование', 'Защитите свою семью - страховой полис от 1500₸ в месяц', 'Страхование жизни')">
             </div>
         </div>
+    </div>
+
+    <!-- Модальное окно -->
+    <div class="modal-overlay" id="modal" onclick="closeModal()">
+        <div class="modal-content" onclick="event.stopPropagation()">
+            <h2 id="modal-title" style="margin: 0 0 16px;"></h2>
+            <div id="modal-text" style="color: #666; margin-bottom: 24px;"></div>
+            <div style="display: flex; align-items: center; gap: 8px;">
+                <span class="material-icons-round" style="color: var(--accent-color);">local_offer</span>
+                <span id="modal-tag" style="color: var(--accent-color); font-weight: 500;"></span>
+            </div>
+            <button class="button" style="margin-top: 24px; width: 100%;" onclick="closeModal()">
+                Понятно
+            </button>
+        </div>
+    </div>
+
+    <div class="bottom-nav">
+        <button class="button" onclick="showPage('home')">
+            <span class="material-icons-round">home</span>
+        </button>
+        <button class="button" onclick="showPage('history')">
+            <span class="material-icons-round">list</span>
+        </button>
+        <a href="https://example.com/support" class="button">
+            <span class="material-icons-round">support_agent</span>
+        </a>
     </div>
 
     <script>
         const tg = window.Telegram.WebApp;
         tg.expand();
+        
+        // Инициализация пользователя
+        const user = tg.initDataUnsafe.user;
+        document.getElementById('username').textContent = '@' + user.username;
+        document.getElementById('user-photo').src = user.photo_url;
 
-        // Инициализация данных пользователя
-        function initUserData() {
-            const user = tg.initDataUnsafe.user;
-            const avatar = document.getElementById('user-avatar');
-            const userName = document.getElementById('user-name');
-            const userUsername = document.getElementById('user-username');
-
-            // Установка аватара
-            if(user?.photo_url) {
-                avatar.src = user.photo_url;
-            } else {
-                avatar.style.display = 'none';
-            }
-
-            // Установка имени пользователя
-            if(user?.username) {
-                userName.textContent = `@${user.username}`;
-                userUsername.textContent = [user.first_name, user.last_name].filter(Boolean).join(' ') || 'Пользователь';
-            } else {
-                userName.textContent = [user?.first_name, user?.last_name].filter(Boolean).join(' ') || 'Пользователь';
-                userUsername.textContent = 'Добро пожаловать!';
-            }
+        // Функция переключения страниц
+        function showPage(pageId) {
+            document.querySelectorAll('.page').forEach(page => {
+                page.classList.remove('active');
+            });
+            document.getElementById(`${pageId}-page`).classList.add('active');
         }
 
-        // Обработчики событий
-        document.addEventListener('DOMContentLoaded', () => {
-            initUserData();
-            
-            document.querySelectorAll('.action-button').forEach(btn => {
-                btn.addEventListener('click', () => {
-                    tg.HapticFeedback.impactOccurred('light');
-                    tg.showAlert(`${btn.querySelector('div').textContent} - функция в разработке`);
-                });
+        // Модальное окно
+        function showModal(title, text, tag) {
+            document.getElementById('modal-title').textContent = title;
+            document.getElementById('modal-text').textContent = text;
+            document.getElementById('modal-tag').textContent = tag;
+            document.getElementById('modal').style.display = 'flex';
+        }
+
+        function closeModal() {
+            document.getElementById('modal').style.display = 'none';
+        }
+
+        // Обработка ссылок
+        document.querySelectorAll('a').forEach(link => {
+            link.addEventListener('click', function(e) {
+                if(this.href === '#') return;
+                e.preventDefault();
+                tg.openLink(this.href);
             });
         });
 
-        // Параллакс-эффект для хедера
-        window.addEventListener('scroll', () => {
-            const header = document.querySelector('.header');
-            header.style.transform = `translateY(${window.scrollY * 0.4}px)`;
-        });
+        // Защита от копирования
+        document.addEventListener('contextmenu', e => e.preventDefault());
     </script>
 </body>
 </html>
