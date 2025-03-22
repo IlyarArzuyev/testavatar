@@ -1,313 +1,153 @@
 <!DOCTYPE html>
-<html>
+<html lang="ru">
 <head>
     <meta charset="UTF-8">
-    <title>Jusan Mobile Pro</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <link href="https://fonts.googleapis.com/icon?family=Material+Icons+Round" rel="stylesheet">
-    <style>
-        :root {
-            --primary-color: #1A237E;
-            --accent-color: #4CAF50;
-            --background: linear-gradient(180deg, #f8f9fa 0%, #e9ecef 100%);
-            --shadow: 0 12px 32px rgba(0,0,0,0.1);
-            --surface: rgba(255, 255, 255, 0.98);
-            --overlay: rgba(0,0,0,0.4);
-        }
-
-        * {
-            -webkit-user-select: none;
-            -moz-user-select: none;
-            -ms-user-select: none;
-            user-select: none;
-            -webkit-tap-highlight-color: transparent;
-            box-sizing: border-box;
-        }
-
-        body {
-            font-family: 'Roboto', Arial, sans-serif;
-            margin: 0;
-            background: var(--background);
-            min-height: 100vh;
-            overscroll-behavior-y: contain;
-            padding-bottom: 80px;
-            touch-action: manipulation;
-        }
-
-        .header {
-            background: var(--primary-color);
-            color: white;
-            padding: 24px 16px;
-            position: sticky;
-            top: 0;
-            z-index: 100;
-            box-shadow: var(--shadow);
-            backdrop-filter: blur(12px);
-        }
-
-        .page {
-            display: none;
-            opacity: 0;
-            transform: translateY(20px);
-            animation: pageEnter 0.4s ease forwards;
-        }
-
-        @keyframes pageEnter {
-            to { opacity: 1; transform: translateY(0); }
-        }
-
-        .page.active { display: block; }
-
-        .button {
-            background: var(--surface);
-            border-radius: 20px;
-            padding: 20px;
-            cursor: pointer;
-            transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
-            box-shadow: var(--shadow);
-            border: none;
-            text-align: center;
-            position: relative;
-            overflow: hidden;
-        }
-
-        .button:active { transform: scale(0.97); }
-
-        .account-card {
-            background: linear-gradient(135deg, var(--primary-color) 0%, #303F9F 100%);
-            border-radius: 24px;
-            padding: 24px;
-            margin: 24px 16px;
-            color: white;
-            box-shadow: var(--shadow);
-            position: relative;
-            overflow: hidden;
-        }
-
-        .grid {
-            display: grid;
-            gap: 16px;
-            padding: 0 16px;
-        }
-
-        .offer-slider {
-            display: flex;
-            overflow-x: auto;
-            padding: 16px;
-            gap: 16px;
-            margin: 24px 0;
-        }
-
-        .bottom-nav {
-            position: fixed;
-            bottom: 0;
-            left: 0;
-            right: 0;
-            background: var(--surface);
-            display: flex;
-            justify-content: space-around;
-            padding: 16px 0;
-            box-shadow: 0 -12px 32px rgba(0,0,0,0.08);
-            border-radius: 24px 24px 0 0;
-        }
-
-        /* Новые стили для второй страницы */
-        .banners-grid {
-            display: grid;
-            gap: 20px;
-            padding: 16px;
-            grid-template-columns: 1fr;
-        }
-
-        .banner-card {
-            height: 200px;
-            border-radius: 24px;
-            background-size: cover;
-            background-position: center;
-            position: relative;
-            overflow: hidden;
-            transition: transform 0.3s ease;
-        }
-
-        .banner-card:active { transform: scale(0.98); }
-
-        /* Модальное окно */
-        .modal-overlay {
-            position: fixed;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: var(--overlay);
-            display: none;
-            justify-content: center;
-            align-items: center;
-            z-index: 1000;
-            animation: fadeIn 0.3s ease;
-        }
-
-        .modal-content {
-            background: var(--surface);
-            width: 90%;
-            max-width: 400px;
-            border-radius: 24px;
-            padding: 24px;
-            transform: scale(0.9);
-            animation: modalOpen 0.3s ease forwards;
-        }
-
-        @keyframes modalOpen {
-            to { transform: scale(1); }
-        }
-
-        /* Иконки и типографика */
-        .material-icons-round {
-            font-size: 32px;
-            color: var(--primary-color);
-        }
-
-        a {
-            text-decoration: none;
-            color: inherit;
-        }
-    </style>
-</head>
-<body>
-    <div class="header">
-        <div style="display: flex; justify-content: space-between; align-items: center;">
-            <div>
-                <div style="font-size: 14px; opacity: 0.9;">Добро пожаловать</div>
-                <div id="username" style="font-size: 20px; font-weight: 500;"></div>
-            </div>
-            <img id="user-photo" style="width: 40px; height: 40px; border-radius: 50%;">
-        </div>
-    </div>
-
-    <!-- Главная страница -->
-    <div id="home-page" class="page active">
-        <div class="account-card">
-            <div style="display: flex; justify-content: space-between; align-items: center;">
-                <div>
-                    <div style="font-size: 12px; opacity: 0.8;"></div>
-                    <div style="font-size: 32px; font-weight: 700; margin: 8px 0;">Expert Credit</div>
-                    <div style="font-size: 14px;">• • •</div>
-                </div>
-                <div class="button" style="background: rgba(255,255,255,0.2);">
-                    <span class="material-icons-round">real_estate_agent</span>
-                </div>
-            </div>
-        </div>
-
-        <div class="grid" style="grid-template-columns: repeat(2, 1fr);">
-            <a href="https://example.com/transfer" class="button">
-                <span class="material-icons-round">attach_file</span>
-                <div>Гайд</div>
-            </a>
-            <a href="https://example.com/payment" class="button">
-                <span class="material-icons-round">star_rate</span>
-                <div>Отзыв</div>
-            </a>
-            <a href="https://example.com/qr" class="button">
-                <span class="material-icons-round">done_all</span>
-                <div>Оценка эксперта</div>
-            </a>
-            <a href="https://example.com/deposit" class="button">
-                <span class="material-icons-round">payment</span>
-                <div>Оплата</div>
-            </a>
-        </div>
-
-        <div class="offer-slider">
-            <div class="banner-card" style="aspect-ratio: 2/1; min-width: 80%; background-image: url('ban1.png')"></div>
-            <div class="banner-card" style="aspect-ratio: 2/1; min-width: 80%; background-image: url('baner2.jpeg')"></div>
-        </div>
-    </div>
-
-    <!-- Страница истории и баннеров -->
-    <div id="history-page" class="page">
-        <div class="banners-grid">
-            <div class="banner-card" 
-                 style="background-image: url('ban1.png')"
-                 onclick="showModal('Акция', 'Получайте двойной кэшбэк за покупки в партнерских магазинах до 30 сентября', '15% кэшбэк')">
-            </div>
-            <div class="banner-card" 
-                 style="background-image: url('baner2.jpeg')"
-                 onclick="showModal('Новый вклад', 'Откройте вклад под 12% годовых с возможностью пополнения', 'до 12% годовых')">
-            </div>
-            <div class="banner-card" 
-                 style="background-image: url('ban3.jpeg')"
-                 onclick="showModal('Страхование', 'Защитите свою семью - страховой полис от 1500₸ в месяц', 'Страхование жизни')">
-            </div>
-        </div>
-    </div>
-
-    <!-- Модальное окно -->
-    <div class="modal-overlay" id="modal" onclick="closeModal()">
-        <div class="modal-content" onclick="event.stopPropagation()">
-            <h2 id="modal-title" style="margin: 0 0 16px;"></h2>
-            <div id="modal-text" style="color: #666; margin-bottom: 24px;"></div>
-            <div style="display: flex; align-items: center; gap: 8px;">
-                <span class="material-icons-round" style="color: var(--accent-color);">local_offer</span>
-                <span id="modal-tag" style="color: var(--accent-color); font-weight: 500;"></span>
-            </div>
-            <button class="button" style="margin-top: 24px; width: 100%;" onclick="closeModal()">
-                Понятно
-            </button>
-        </div>
-    </div>
-
-    <div class="bottom-nav">
-        <button class="button" onclick="showPage('home')">
-            <span class="material-icons-round">home</span>
-        </button>
-        <button class="button" onclick="showPage('history')">
-            <span class="material-icons-round">list</span>
-        </button>
-        <a href="https://example.com/support" class="button">
-            <span class="material-icons-round">support_agent</span>
-        </a>
-    </div>
-
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Ипотечный Калькулятор</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.9.2/html2pdf.bundle.min.js"></script>
     <script>
-        const tg = window.Telegram.WebApp;
-        tg.expand();
-        
-        // Инициализация пользователя
-        const user = tg.initDataUnsafe.user;
-        document.getElementById('username').textContent = '@' + user.username;
-        document.getElementById('user-photo').src = user.photo_url;
-
-        // Функция переключения страниц
-        function showPage(pageId) {
-            document.querySelectorAll('.page').forEach(page => {
-                page.classList.remove('active');
-            });
-            document.getElementById(`${pageId}-page`).classList.add('active');
+        function formatNumber(num) {
+            return num.toString().replace(/\B(?=(\d{3})+(?!\d))/g, " ");
         }
 
-        // Модальное окно
-        function showModal(title, text, tag) {
-            document.getElementById('modal-title').textContent = title;
-            document.getElementById('modal-text').textContent = text;
-            document.getElementById('modal-tag').textContent = tag;
-            document.getElementById('modal').style.display = 'flex';
+        function parseNumber(str) {
+            return parseFloat(str.replace(/\s/g, ''));
         }
 
-        function closeModal() {
-            document.getElementById('modal').style.display = 'none';
+        function calculate() {
+            const amount = parseNumber(document.getElementById('amount').value);
+            const rate = parseFloat(document.getElementById('rate').value) / 100 / 12;
+            const months = parseFloat(document.getElementById('months').value);
+            const type = document.querySelector('input[name="type"]:checked').value;
+
+            let totalPayment = 0;
+            let overpayment = 0;
+            let remainingAmount = amount;
+            let payments = [];
+
+            let monthlyPaymentResult = 0;
+
+            if (type === 'annuity') {
+                const annuityCoefficient = (rate * Math.pow(1 + rate, months)) / (Math.pow(1 + rate, months) - 1);
+                monthlyPaymentResult = amount * annuityCoefficient;
+                totalPayment = monthlyPaymentResult * months;
+                overpayment = totalPayment - amount;
+
+                for (let i = 1; i <= months; i++) {
+                    const interestPayment = remainingAmount * rate;
+                    const principalPayment = monthlyPaymentResult - interestPayment;
+                    remainingAmount -= principalPayment;
+
+                    payments.push({
+                        month: i,
+                        monthlyPayment: formatNumber(monthlyPaymentResult.toFixed(2)),
+                        principalPayment: formatNumber(principalPayment.toFixed(2)),
+                        interestPayment: formatNumber(interestPayment.toFixed(2)),
+                        remainingAmount: formatNumber(remainingAmount.toFixed(2))
+                    });
+                }
+            } else {
+                const principalPayment = amount / months;
+
+                for (let i = 1; i <= months; i++) {
+                    const interestPayment = remainingAmount * rate;
+                    monthlyPaymentResult = principalPayment + interestPayment;
+                    totalPayment += monthlyPaymentResult;
+                    overpayment = totalPayment - amount;
+
+                    payments.push({
+                        month: i,
+                        monthlyPayment: formatNumber(monthlyPaymentResult.toFixed(2)),
+                        principalPayment: formatNumber(principalPayment.toFixed(2)),
+                        interestPayment: formatNumber(interestPayment.toFixed(2)),
+                        remainingAmount: formatNumber(remainingAmount.toFixed(2))
+                    });
+
+                    remainingAmount -= principalPayment;
+                }
+            }
+
+            document.getElementById('result').innerHTML = `
+                <p>Ежемесячный платёж: ${formatNumber(monthlyPaymentResult.toFixed(2))} ₸</p>
+                <p>Переплата: ${formatNumber(overpayment.toFixed(2))} ₸</p>
+                <p>Общая сумма выплат: ${formatNumber(totalPayment.toFixed(2))} ₸</p>
+            `;
+
+            sessionStorage.setItem('payments', JSON.stringify(payments));
         }
 
-        // Обработка ссылок
-        document.querySelectorAll('a').forEach(link => {
-            link.addEventListener('click', function(e) {
-                if(this.href === '#') return;
-                e.preventDefault();
-                tg.openLink(this.href);
-            });
+        function downloadPDF() {
+            const payments = JSON.parse(sessionStorage.getItem('payments'));
+
+            let tableContent = `
+            <div style='display: flex; justify-content: space-between; align-items: center; margin-bottom: 40px; padding: 0 10px;'>
+                <h1>Предварительный график погашения от Expert Credit</h1>
+                <img src="logo21.png" alt="Логотип Expert Credit" style="height: 50px;">
+            </div>
+            <table class='table-auto w-full mt-4 border-collapse border border-gray-300' style='margin: 0 10px 0 10px;'>
+                <thead>
+                    <tr>
+                        <th>Месяц</th>
+                        <th>Ежемесячный платёж (₸)</th>
+                        <th>Основной долг (₸)</th>
+                        <th>Проценты банка (₸)</th>
+                        <th>Остаток долга (₸)</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    ${payments.map(payment => `
+                    <tr>
+                        <td>${payment.month}</td>
+                        <td>${payment.monthlyPayment}</td>
+                        <td>${payment.principalPayment}</td>
+                        <td>${payment.interestPayment}</td>
+                        <td>${payment.remainingAmount}</td>
+                    </tr>
+                    `).join('')}
+                </tbody>
+            </table>`;
+
+            const element = document.createElement('div');
+            element.innerHTML = tableContent;
+            html2pdf().from(element).save();
+        }
+
+        document.addEventListener('click', (e) => {
+            if (!e.target.closest('input, button')) {
+                document.activeElement.blur();
+            }
         });
-
-        // Защита от копирования
-        document.addEventListener('contextmenu', e => e.preventDefault());
     </script>
+</head>
+<body class="bg-gray-100 text-gray-800">
+<div class="container mx-auto p-4 max-w-lg">
+    <div class="flex justify-start mb-4">
+        <a href="index.html" class="bg-gray-500 text-white py-1 px-4 rounded">Назад</a>
+    </div>
+    <div class="bg-white shadow-md rounded-lg p-6">
+        <h1 class="text-2xl font-bold mb-4">Ипотечный Калькулятор</h1>
+        <div class="mb-4">
+            <label>Сумма кредита (₸):</label>
+            <input type="text" id="amount" class="border rounded p-2 w-full" placeholder="Введите сумму">
+        </div>
+        <div class="mb-4">
+            <label>Процентная ставка (% годовых):</label>
+            <input type="number" id="rate" class="border rounded p-2 w-full" placeholder="Введите % ставку">
+        </div>
+        <div class="mb-4">
+            <label>Срок кредита (месяцев):</label>
+            <input type="number" id="months" class="border rounded p-2 w-full" placeholder="Введите срок">
+        </div>
+        <div class="mb-4">
+            <label>Тип платежа:</label><br>
+            <input type="radio" name="type" value="annuity" checked> Аннуитетный
+            <input type="radio" name="type" value="differentiated"> Дифференцированный
+        </div>
+        <button class="bg-blue-500 text-white rounded p-2 mb-4 w-full" onclick="calculate()">Рассчитать</button>
+        <button class="bg-green-500 text-white rounded p-2 mb-4 w-full" onclick="downloadPDF()">Скачать график (PDF)</button>
+        <div id="result" class="mt-4 bg-gray-50 p-4 rounded"></div>
+    </div>
+</div>
 </body>
 </html>
