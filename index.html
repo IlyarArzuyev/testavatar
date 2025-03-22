@@ -3,9 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Ultimate iOS Style Dashboard</title>
-    <meta name="apple-mobile-web-app-capable" content="yes">
-    <link rel="manifest" href="/manifest.webmanifest">
+    <title>iOS Style Dashboard</title>
     <style>
         :root {
             --bg-color: #ffffff;
@@ -51,7 +49,6 @@
             box-shadow: 0 0 30px rgba(0,0,0,0.1);
         }
 
-        /* Header Styles */
         .header {
             padding: 2rem 1rem 1rem;
             display: flex;
@@ -60,7 +57,6 @@
             background: var(--card-bg);
             border-radius: 0 0 20px 20px;
             box-shadow: 0 2px 10px rgba(0,0,0,0.05);
-            position: relative;
         }
 
         .avatar {
@@ -71,7 +67,6 @@
             border: 2px solid var(--primary);
         }
 
-        /* Premium Banner */
         .premium-banner {
             background: linear-gradient(135deg, #ff9f0a, #ff375f);
             color: white;
@@ -84,21 +79,6 @@
             animation: slideUp 0.5s ease;
         }
 
-        .premium-banner button {
-            background: rgba(255,255,255,0.2);
-            border: none;
-            padding: 8px 20px;
-            border-radius: 20px;
-            color: white;
-            cursor: pointer;
-            transition: all 0.2s;
-        }
-
-        .premium-banner button:active {
-            transform: scale(0.95);
-        }
-
-        /* Section Styles */
         .section {
             margin: 1rem;
             background: var(--card-bg);
@@ -119,7 +99,6 @@
             font-weight: 600;
         }
 
-        /* List Items */
         .list-item {
             padding: 1rem;
             display: flex;
@@ -132,15 +111,6 @@
             color: inherit;
         }
 
-        .list-item:active {
-            background: var(--highlight);
-        }
-
-        .list-item:last-child {
-            border-bottom: none;
-        }
-
-        /* Buttons */
         .button {
             background: var(--primary);
             color: white;
@@ -156,26 +126,6 @@
             cursor: pointer;
         }
 
-        .button:hover {
-            background: var(--primary-hover);
-        }
-
-        .button:active {
-            transform: scale(0.95);
-        }
-
-        .button-outline {
-            background: transparent;
-            border: 1px solid var(--primary);
-            color: var(--primary);
-        }
-
-        .button-icon {
-            padding: 10px;
-            border-radius: 50%;
-        }
-
-        /* Stats Grid */
         .stats-grid {
             display: grid;
             grid-template-columns: repeat(2, 1fr);
@@ -188,26 +138,14 @@
             padding: 1rem;
             border-radius: 12px;
             text-align: center;
-            transition: transform 0.2s;
         }
 
-        .stat-card:active {
-            transform: scale(0.98);
-        }
-
-        .stat-value {
-            font-size: 1.5rem;
-            font-weight: bold;
-            margin: 0.5rem 0;
-            color: var(--primary);
-        }
-
-        /* Progress Bar */
         .progress-bar {
             height: 6px;
             background: rgba(0,0,0,0.1);
             border-radius: 3px;
             overflow: hidden;
+            margin: 0.5rem 0;
         }
 
         .progress-fill {
@@ -217,7 +155,6 @@
             transition: width 0.3s ease;
         }
 
-        /* Tab Bar */
         .tab-bar {
             position: fixed;
             bottom: 0;
@@ -239,7 +176,6 @@
             gap: 4px;
             font-size: 0.8rem;
             cursor: pointer;
-            transition: color 0.2s;
             text-decoration: none;
         }
 
@@ -247,72 +183,6 @@
             color: var(--primary);
         }
 
-        /* Theme Toggle */
-        .theme-toggle {
-            position: fixed;
-            top: 1rem;
-            right: 1rem;
-            padding: 8px 12px;
-            border-radius: 20px;
-            background: var(--card-bg);
-            border: none;
-            color: var(--text-color);
-            cursor: pointer;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
-        }
-
-        /* Animations */
-        @keyframes slideUp {
-            from { transform: translateY(20px); opacity: 0; }
-            to { transform: translateY(0); opacity: 1; }
-        }
-
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(10px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-
-        .page {
-            display: none;
-            animation: fadeIn 0.3s ease;
-        }
-
-        .page.active {
-            display: block;
-        }
-
-        /* Floating Action Button */
-        .fab {
-            position: fixed;
-            bottom: 80px;
-            right: 20px;
-            background: var(--primary);
-            width: 56px;
-            height: 56px;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.2);
-            cursor: pointer;
-            transition: all 0.2s;
-        }
-
-        .fab:active {
-            transform: scale(0.9);
-        }
-
-        /* Notification Badge */
-        .badge {
-            background: var(--error);
-            color: white;
-            padding: 4px 8px;
-            border-radius: 10px;
-            font-size: 0.7rem;
-            margin-left: auto;
-        }
-
-        /* Switch */
         .switch {
             position: relative;
             display: inline-block;
@@ -358,11 +228,72 @@
         input:checked + .slider:before {
             transform: translateX(20px);
         }
+
+        .fab {
+            position: fixed;
+            bottom: 80px;
+            right: 20px;
+            background: var(--primary);
+            width: 56px;
+            height: 56px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0,0,0,0.5);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+        }
+
+        .modal {
+            background: var(--card-bg);
+            padding: 2rem;
+            border-radius: 20px;
+            width: 90%;
+            max-width: 380px;
+            animation: modalSlide 0.3s ease;
+        }
+
+        @keyframes slideUp {
+            from { transform: translateY(20px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        @keyframes modalSlide {
+            from { transform: translateY(100px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+
+        .page {
+            display: none;
+            animation: fadeIn 0.3s ease;
+        }
+
+        .page.active {
+            display: block;
+        }
     </style>
 </head>
 <body>
-    <button class="theme-toggle" onclick="toggleTheme()">🌓</button>
-    <div class="fab" onclick="showNewFeature()">
+    <div class="fab" onclick="showModal('new-post')">
         <img src="https://cdn.jsdelivr.net/npm/feather-icons/dist/icons/plus.svg" width="24" style="filter: invert(1);">
     </div>
     
@@ -372,63 +303,56 @@
             <header class="header">
                 <img src="https://i.pravatar.cc/100" class="avatar" alt="Avatar">
                 <div>
-                    <h2>John Doe</h2>
-                    <p style="color: var(--text-secondary)">Premium member</p>
+                    <h2>Emily Johnson</h2>
+                    <p style="color: var(--text-secondary)">Premium Member</p>
                 </div>
-                <span class="badge">PRO</span>
             </header>
 
             <div class="premium-banner">
                 <img src="https://cdn.jsdelivr.net/npm/feather-icons/dist/icons/zap.svg" width="32">
                 <div>
-                    <h3>Premium Features</h3>
-                    <p>Unlock all features with Premium</p>
+                    <h3>Exclusive Features</h3>
+                    <p>Unlock premium experience</p>
                 </div>
-                <button>Upgrade</button>
+                <button class="button" onclick="showModal('upgrade')">Upgrade</button>
             </div>
 
             <section class="section">
                 <div class="section-header">
-                    <h3 class="section-title">Quick Actions</h3>
-                    <a href="#more" class="button-outline button">View All</a>
+                    <h3 class="section-title">Activity</h3>
+                    <a href="#activity" class="button">View All</a>
                 </div>
                 <div class="stats-grid">
-                    <a href="#storage" class="stat-card">
-                        <h4>📦 Storage</h4>
+                    <div class="stat-card">
+                        <h4>Steps</h4>
                         <div class="progress-bar">
-                            <div class="progress-fill"></div>
+                            <div class="progress-fill" style="width: 75%"></div>
                         </div>
-                        <div class="stat-value">65%</div>
-                    </a>
-                    <a href="#rewards" class="stat-card">
-                        <h4>🎁 Rewards</h4>
-                        <div class="stat-value">1,240</div>
-                        <p>Points Available</p>
-                    </a>
+                        <p style="color: var(--text-secondary)">7,500/10,000</p>
+                    </div>
+                    <div class="stat-card">
+                        <h4>Calories</h4>
+                        <div class="progress-bar">
+                            <div class="progress-fill" style="width: 45%"></div>
+                        </div>
+                        <p style="color: var(--text-secondary)">450/1,000 kcal</p>
+                    </div>
                 </div>
             </section>
 
             <section class="section">
-                <a href="#security" class="list-item">
-                    <img src="https://cdn.jsdelivr.net/npm/feather-icons/dist/icons/shield.svg" width="24">
-                    <div>
-                        <h3>Security</h3>
-                        <p style="color: var(--text-secondary)">Password and 2FA</p>
-                    </div>
-                    <span class="badge">2 Active</span>
-                </a>
                 <a href="#notifications" class="list-item">
                     <img src="https://cdn.jsdelivr.net/npm/feather-icons/dist/icons/bell.svg" width="24">
                     <div>
                         <h3>Notifications</h3>
-                        <p style="color: var(--text-secondary)">3 new notifications</p>
+                        <p style="color: var(--text-secondary)">2 new messages</p>
                     </div>
                 </a>
-                <a href="#payment" class="list-item">
-                    <img src="https://cdn.jsdelivr.net/npm/feather-icons/dist/icons/credit-card.svg" width="24">
+                <a href="#settings" class="list-item">
+                    <img src="https://cdn.jsdelivr.net/npm/feather-icons/dist/icons/settings.svg" width="24">
                     <div>
-                        <h3>Payment Methods</h3>
-                        <p style="color: var(--text-secondary)">2 cards connected</p>
+                        <h3>Settings</h3>
+                        <p style="color: var(--text-secondary)">Account preferences</p>
                     </div>
                 </a>
             </section>
@@ -441,41 +365,36 @@
             </header>
 
             <section class="section">
-                <div class="list-item" onclick="toggleTheme()">
+                <div class="list-item">
                     <img src="https://cdn.jsdelivr.net/npm/feather-icons/dist/icons/moon.svg" width="24">
                     <div>
                         <h3>Dark Mode</h3>
-                        <p style="color: var(--text-secondary)">System default</p>
+                        <p style="color: var(--text-secondary)">Enable dark theme</p>
                     </div>
                     <label class="switch">
                         <input type="checkbox" id="themeSwitch">
                         <span class="slider"></span>
                     </label>
                 </div>
+                <a href="#account" class="list-item">
+                    <img src="https://cdn.jsdelivr.net/npm/feather-icons/dist/icons/user.svg" width="24">
+                    <div>
+                        <h3>Account</h3>
+                        <p style="color: var(--text-secondary)">Profile settings</p>
+                    </div>
+                </a>
                 <a href="#privacy" class="list-item">
                     <img src="https://cdn.jsdelivr.net/npm/feather-icons/dist/icons/lock.svg" width="24">
                     <div>
                         <h3>Privacy</h3>
-                        <p style="color: var(--text-secondary)">Data permissions</p>
-                    </div>
-                </a>
-                <a href="#support" class="list-item">
-                    <img src="https://cdn.jsdelivr.net/npm/feather-icons/dist/icons/life-buoy.svg" width="24">
-                    <div>
-                        <h3>Support</h3>
-                        <p style="color: var(--text-secondary)">Help center</p>
+                        <p style="color: var(--text-secondary)">Data protection</p>
                     </div>
                 </a>
             </section>
 
             <section class="section">
-                <h3 class="section-title">Account</h3>
-                <button class="button" style="width: 100%; margin-top: 1rem;">
-                    <img src="https://cdn.jsdelivr.net/npm/feather-icons/dist/icons/log-out.svg" width="18">
-                    Log Out
-                </button>
-                <button class="button-outline button" style="width: 100%; margin-top: 1rem;">
-                    Delete Account
+                <button class="button" style="width: 100%;" onclick="showModal('support')">
+                    Contact Support
                 </button>
             </section>
         </div>
@@ -497,13 +416,25 @@
         </nav>
     </div>
 
+    <!-- Modals -->
+    <div class="modal-overlay" id="upgrade-modal" onclick="hideModal()">
+        <div class="modal">
+            <h2 style="margin-bottom: 1rem;">✨ Go Premium</h2>
+            <ul style="list-style: none; margin: 1.5rem 0;">
+                <li style="padding: 0.5rem 0;">✓ Unlimited features</li>
+                <li style="padding: 0.5rem 0;">✓ Priority support</li>
+                <li style="padding: 0.5rem 0;">✓ Advanced analytics</li>
+            </ul>
+            <button class="button" style="width: 100%;" onclick="hideModal()">Get Premium</button>
+        </div>
+    </div>
+
     <script>
         // Theme Management
         function toggleTheme() {
             const newTheme = document.body.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
             document.body.setAttribute('data-theme', newTheme);
             localStorage.setItem('theme', newTheme);
-            document.getElementById('themeSwitch').checked = newTheme === 'dark';
         }
 
         // Page Navigation
@@ -512,54 +443,43 @@
             document.getElementById(pageId).classList.add('active');
             document.querySelectorAll('.tab-item').forEach(tab => tab.classList.remove('active'));
             document.querySelector(`[href="#${pageId}"]`).classList.add('active');
-            window.history.pushState({}, '', `#${pageId}`);
+            window.location.hash = pageId;
+        }
+
+        // Modal Handling
+        function showModal(type) {
+            document.getElementById('upgrade-modal').style.display = 'flex';
+        }
+
+        function hideModal() {
+            document.getElementById('upgrade-modal').style.display = 'none';
         }
 
         // Initialization
-        window.addEventListener('DOMContentLoaded', () => {
+        document.addEventListener('DOMContentLoaded', () => {
+            // Load saved theme
             const savedTheme = localStorage.getItem('theme') || 'light';
             document.body.setAttribute('data-theme', savedTheme);
             document.getElementById('themeSwitch').checked = savedTheme === 'dark';
-            
+
+            // Theme switch listener
+            document.getElementById('themeSwitch').addEventListener('change', toggleTheme);
+
+            // Handle modal clicks
+            document.getElementById('upgrade-modal').addEventListener('click', (e) => {
+                if(e.target === e.currentTarget) hideModal();
+            });
+
+            // Handle initial page load
             if(window.location.hash) {
                 switchPage(window.location.hash.substring(1));
             }
         });
 
-        // FAB Action
-        function showNewFeature() {
-            alert('🎉 New Feature Coming Soon!');
-        }
-
-        // Switch Theme Synchronization
-        document.getElementById('themeSwitch').addEventListener('change', toggleTheme);
-
-        // Handle Back/Forward Navigation
-        window.addEventListener('popstate', () => {
+        // Handle back/forward navigation
+        window.addEventListener('hashchange', () => {
             const pageId = window.location.hash.substring(1);
-            if (pageId) switchPage(pageId);
-        });
-
-        // Add Ripple Effect
-        document.querySelectorAll('.button, .list-item').forEach(button => {
-            button.addEventListener('click', function(e) {
-                const ripple = document.createElement('div');
-                ripple.style.position = 'absolute';
-                ripple.style.width = '20px';
-                ripple.style.height = '20px';
-                ripple.style.background = 'rgba(255,255,255,0.5)';
-                ripple.style.borderRadius = '50%';
-                ripple.style.transform = 'translate(-50%, -50%)';
-                ripple.style.pointerEvents = 'none';
-                ripple.style.animation = 'ripple 0.6s linear';
-                
-                const rect = this.getBoundingClientRect();
-                ripple.style.left = `${e.clientX - rect.left}px`;
-                ripple.style.top = `${e.clientY - rect.top}px`;
-                
-                this.appendChild(ripple);
-                setTimeout(() => ripple.remove(), 600);
-            });
+            if(pageId) switchPage(pageId);
         });
     </script>
 </body>
