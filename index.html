@@ -96,8 +96,6 @@
       transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
       cursor: pointer;
       border: 1px solid rgba(0,0,0,0.05);
-      width: 45px;
-      height: 45px;
     }
     
     .action-button:hover {
@@ -107,19 +105,15 @@
     
     /* Иконки кнопок 15x15 пикселей */
     .action-icon {
-      font-size: 25px;
-      width: 25px;
-      height: 25px;
+      font-size: 15px;
+      width: 15px;
+      height: 15px;
       display: inline-block;
       color: var(--primary-color);
       margin-bottom: 8px;
       transition: transform 0.3s ease;
       line-height: 15px;
     }
-	  .action-button div {
-	    font-size: 12px;
-	  }
-	
     
     /* Секция предложений */
     .offer-slider {
@@ -192,10 +186,6 @@
       line-height: var(--footer-height);
     }
     
-	.aria-label {
-		font-size: 10px;
-	}
-	
     /* Анимации */
     @keyframes fadeIn {
       from { opacity: 0; transform: translateY(20px); }
@@ -221,7 +211,7 @@
 <body>
   <header class="header" aria-label="Панель пользователя">
     <div>
-      <div style="font-size: 14px; opacity: 0.9;">Добро пожаловать</div>
+      <div style="font-size: 14px; opacity: 0.9;">Дообро пожаловать</div>
       <div id="userName" style="font-size: 20px; font-weight: 500;">Иван Петров</div>
     </div>
     <div id="userAvatar" aria-label="Профиль пользователя">
@@ -287,7 +277,7 @@
       </div>
     </section>
 
-    <!-- Новый раздел "Последние транзакции" -->
+    <!-- Раздел "Последние транзакции" -->
     <section class="transactions animated" style="animation-delay: 1s;">
       <div class="transactions-header">Последние транзакции</div>
       <div class="transaction-item">
@@ -311,21 +301,21 @@
   </footer>
 
   <script>
-    const tg = window.Telegram && window.Telegram.WebApp;
-    if (tg) {
-      tg.expand();
-      tg.ready();
-      // Если данные пользователя доступны, обновляем имя и аватарку
-      if (tg.initDataUnsafe && tg.initDataUnsafe.user) {
-        const user = tg.initDataUnsafe.user;
-        // Если задан username, используем его, иначе формируем имя из first_name/last_name
-        const displayName = user.username ? user.username : (user.first_name + (user.last_name ? ' ' + user.last_name : ''));
-        document.getElementById('userName').textContent = displayName;
-        if (user.photo_url) {
-          document.getElementById('userAvatar').innerHTML = '<img src="' + user.photo_url + '" alt="User Avatar" style="width:40px; height:40px; border-radius:50%;">';
+    window.addEventListener('load', function(){
+      const tg = window.Telegram && window.Telegram.WebApp;
+      if(tg) {
+        tg.ready();
+        // Если данные пользователя доступны, обновляем имя и аватарку
+        if(tg.initDataUnsafe && tg.initDataUnsafe.user) {
+          const user = tg.initDataUnsafe.user;
+          const displayName = user.username || (user.first_name + (user.last_name ? ' ' + user.last_name : ''));
+          document.getElementById('userName').textContent = displayName;
+          if(user.photo_url) {
+            document.getElementById('userAvatar').innerHTML = '<img src="' + user.photo_url + '" alt="User Avatar" style="width:40px; height:40px; border-radius:50%;">';
+          }
         }
       }
-    }
+    });
     
     // Инициализация анимаций для всех элементов с классом "animated"
     document.querySelectorAll('.animated').forEach((el, index) => {
