@@ -293,10 +293,6 @@
     </style>
 </head>
 <body>
-    <div class="fab" onclick="showModal('new-post')">
-        <img src="https://cdn.jsdelivr.net/npm/feather-icons/dist/icons/plus.svg" width="24" style="filter: invert(1);">
-    </div>
-    
     <div class="container">
         <!-- Profile Page -->
         <div class="page active" id="profile">
@@ -357,7 +353,75 @@
                 </a>
             </section>
         </div>
+<!-- Stats Page -->
+<div class="page" id="stats">
+    <header class="header">
+        <h2>Activity Stats</h2>
+    </header>
 
+    <div class="premium-banner" style="background: linear-gradient(135deg, #32d74b, #00c7be);">
+        <img src="https://cdn.jsdelivr.net/npm/feather-icons/dist/icons/award.svg" width="32">
+        <div>
+            <h3>Daily Achievement</h3>
+            <p>You've reached 75% of your goal! 🎉</p>
+        </div>
+    </div>
+
+    <section class="section">
+        <div class="section-header">
+            <h3 class="section-title">Health Metrics</h3>
+            <span style="color: var(--text-secondary)">Last 7 days</span>
+        </div>
+        
+        <div class="stats-grid">
+            <div class="stat-card">
+                <img src="https://cdn.jsdelivr.net/npm/feather-icons/dist/icons/activity.svg" width="24">
+                <h4>12,345 Steps</h4>
+                <p style="color: var(--text-secondary)">+8% from yesterday</p>
+            </div>
+            <div class="stat-card">
+                <img src="https://cdn.jsdelivr.net/npm/feather-icons/dist/icons/heart.svg" width="24">
+                <h4>78 BPM</h4>
+                <p style="color: var(--text-secondary)">Average heart rate</p>
+            </div>
+        </div>
+    </section>
+
+    <section class="section">
+        <div class="section-header">
+            <h3 class="section-title">Weekly Progress</h3>
+        </div>
+        
+        <div class="list-item">
+            <div style="flex: 1;">
+                <h4>Activity Time</h4>
+                <div class="progress-bar" style="margin: 0.5rem 0;">
+                    <div class="progress-fill" style="width: 85%"></div>
+                </div>
+                <p style="color: var(--text-secondary)">5h 20m / 6h 15m</p>
+            </div>
+        </div>
+        
+        <div class="list-item">
+            <div style="flex: 1;">
+                <h4>Distance Covered</h4>
+                <div class="progress-bar" style="margin: 0.5rem 0;">
+                    <div class="progress-fill" style="width: 65%"></div>
+                </div>
+                <p style="color: var(--text-secondary)">12.4 / 20 km</p>
+            </div>
+        </div>
+    </section>
+
+    <section class="section">
+        <button class="button" style="width: 100%; margin-bottom: 0.5rem;">
+            Share Progress
+        </button>
+        <button class="button" style="width: 100%; background: var(--text-secondary);">
+            Detailed Report
+        </button>
+    </section>
+</div>
         <!-- Settings Page -->
         <div class="page" id="settings">
             <header class="header">
