@@ -206,16 +206,29 @@
       background: rgba(0,0,0,0.1);
       border-radius: 4px;
     }
+    
+    /* Стили для аватарки */
+    .avatar {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      vertical-align: middle;
+      margin-right: 8px;
+    }
+    
+    /* Стили для блока с данными пользователя */
+    #user-header span {
+      font-size: 20px;
+      font-weight: 500;
+      vertical-align: middle;
+    }
   </style>
 </head>
 <body>
   <header class="header" aria-label="Панель пользователя">
-    <div>
-      <div style="font-size: 14px; opacity: 0.9;">Дообро пожаловать</div>
-      <div id="userName" style="font-size: 20px; font-weight: 500;">Иван Петров</div>
-    </div>
-    <div id="userAvatar" aria-label="Профиль пользователя">
-      <span class="material-icons" style="font-size: 40px;">account_circle</span>
+    <div id="user-header">
+      <!-- Если данные Telegram доступны, блок обновится -->
+      <span>Добро пожаловать, Пользователь</span>
     </div>
   </header>
 
@@ -301,21 +314,20 @@
   </footer>
 
   <script>
-    window.addEventListener('load', function(){
-      const tg = window.Telegram && window.Telegram.WebApp;
-      if(tg) {
-        tg.ready();
-        // Если данные пользователя доступны, обновляем имя и аватарку
-        if(tg.initDataUnsafe && tg.initDataUnsafe.user) {
-          const user = tg.initDataUnsafe.user;
-          const displayName = user.username || (user.first_name + (user.last_name ? ' ' + user.last_name : ''));
-          document.getElementById('userName').textContent = displayName;
-          if(user.photo_url) {
-            document.getElementById('userAvatar').innerHTML = '<img src="' + user.photo_url + '" alt="User Avatar" style="width:40px; height:40px; border-radius:50%;">';
-          }
-        }
+    // Проверка и получение данных пользователя из Telegram
+    if (window.Telegram?.WebApp) {
+      const tg = window.Telegram.WebApp;
+      tg.expand();
+      
+      const user = tg.initDataUnsafe?.user;
+      if (user) {
+        const userHeader = document.getElementById("user-header");
+        userHeader.innerHTML = `
+          <img class="avatar" src="${user.photo_url || 'default-avatar.png'}" alt="Аватар">
+          <span>${user.username || user.first_name || 'Пользователь'}</span>
+        `;
       }
-    });
+    }
     
     // Инициализация анимаций для всех элементов с классом "animated"
     document.querySelectorAll('.animated').forEach((el, index) => {
