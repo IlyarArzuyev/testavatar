@@ -17,6 +17,8 @@
             --success: #34c759;
             --warning: #ff9500;
             --error: #ff3b30;
+            --header-height: 90px;
+            --tab-bar-height: 70px;
         }
 
         [data-theme="dark"] {
@@ -44,19 +46,59 @@
         .container {
             max-width: 430px;
             margin: 0 auto;
-            min-height: 100vh;
             position: relative;
-            box-shadow: 0 0 30px rgba(0,0,0,0.1);
+            height: 100vh;
+            overflow: hidden;
         }
 
         .header {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
             padding: 2rem 1rem 1rem;
             display: flex;
             align-items: center;
             gap: 1rem;
             background: var(--card-bg);
-            border-radius: 0 0 20px 20px;
             box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+            z-index: 1000;
+            height: var(--header-height);
+            max-width: 430px;
+            margin: 0 auto;
+            border-radius: 0 0 20px 20px;
+        }
+
+        .page {
+            display: none;
+            height: calc(100vh - var(--header-height) - var(--tab-bar-height));
+            overflow-y: auto;
+            padding: 1rem;
+            margin-top: var(--header-height);
+            margin-bottom: var(--tab-bar-height);
+            box-sizing: border-box;
+        }
+
+        .page.active {
+            display: block;
+        }
+
+        .tab-bar {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            width: 100%;
+            max-width: 430px;
+            display: flex;
+            justify-content: space-around;
+            padding: 1rem 0;
+            background: var(--card-bg);
+            border-top: 1px solid var(--border-color);
+            backdrop-filter: blur(10px);
+            z-index: 1000;
+            height: var(--tab-bar-height);
+            margin: 0 auto;
         }
 
         .avatar {
@@ -153,34 +195,6 @@
             background: var(--primary);
             width: 65%;
             transition: width 0.3s ease;
-        }
-
-        .tab-bar {
-            position: fixed;
-            bottom: 0;
-            width: 100%;
-            max-width: 430px;
-            display: flex;
-            justify-content: space-around;
-            padding: 1rem 0;
-            background: var(--card-bg);
-            border-top: 1px solid var(--border-color);
-            backdrop-filter: blur(10px);
-        }
-
-        .tab-item {
-            color: var(--text-secondary);
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            gap: 4px;
-            font-size: 0.8rem;
-            cursor: pointer;
-            text-decoration: none;
-        }
-
-        .tab-item.active {
-            color: var(--primary);
         }
 
         .switch {
@@ -281,15 +295,6 @@
             from { transform: translateY(100px); opacity: 0; }
             to { transform: translateY(0); opacity: 1; }
         }
-
-        .page {
-            display: none;
-            animation: fadeIn 0.3s ease;
-        }
-
-        .page.active {
-            display: block;
-        }
     </style>
 </head>
 <body>
@@ -353,75 +358,77 @@
                 </a>
             </section>
         </div>
-<!-- Stats Page -->
-<div class="page" id="stats">
-    <header class="header">
-        <h2>Activity Stats</h2>
-    </header>
 
-    <div class="premium-banner" style="background: linear-gradient(135deg, #32d74b, #00c7be);">
-        <img src="https://cdn.jsdelivr.net/npm/feather-icons/dist/icons/award.svg" width="32">
-        <div>
-            <h3>Daily Achievement</h3>
-            <p>You've reached 75% of your goal! 🎉</p>
-        </div>
-    </div>
+        <!-- Stats Page -->
+        <div class="page" id="stats">
+            <header class="header">
+                <h2>Activity Stats</h2>
+            </header>
 
-    <section class="section">
-        <div class="section-header">
-            <h3 class="section-title">Health Metrics</h3>
-            <span style="color: var(--text-secondary)">Last 7 days</span>
-        </div>
-        
-        <div class="stats-grid">
-            <div class="stat-card">
-                <img src="https://cdn.jsdelivr.net/npm/feather-icons/dist/icons/activity.svg" width="24">
-                <h4>12,345 Steps</h4>
-                <p style="color: var(--text-secondary)">+8% from yesterday</p>
-            </div>
-            <div class="stat-card">
-                <img src="https://cdn.jsdelivr.net/npm/feather-icons/dist/icons/heart.svg" width="24">
-                <h4>78 BPM</h4>
-                <p style="color: var(--text-secondary)">Average heart rate</p>
-            </div>
-        </div>
-    </section>
-
-    <section class="section">
-        <div class="section-header">
-            <h3 class="section-title">Weekly Progress</h3>
-        </div>
-        
-        <div class="list-item">
-            <div style="flex: 1;">
-                <h4>Activity Time</h4>
-                <div class="progress-bar" style="margin: 0.5rem 0;">
-                    <div class="progress-fill" style="width: 85%"></div>
+            <div class="premium-banner" style="background: linear-gradient(135deg, #32d74b, #00c7be);">
+                <img src="https://cdn.jsdelivr.net/npm/feather-icons/dist/icons/award.svg" width="32">
+                <div>
+                    <h3>Daily Achievement</h3>
+                    <p>You've reached 75% of your goal! 🎉</p>
                 </div>
-                <p style="color: var(--text-secondary)">5h 20m / 6h 15m</p>
             </div>
-        </div>
-        
-        <div class="list-item">
-            <div style="flex: 1;">
-                <h4>Distance Covered</h4>
-                <div class="progress-bar" style="margin: 0.5rem 0;">
-                    <div class="progress-fill" style="width: 65%"></div>
-                </div>
-                <p style="color: var(--text-secondary)">12.4 / 20 km</p>
-            </div>
-        </div>
-    </section>
 
-    <section class="section">
-        <button class="button" style="width: 100%; margin-bottom: 0.5rem;">
-            Share Progress
-        </button>
-        <button class="button" style="width: 100%; background: var(--text-secondary);">
-            Detailed Report
-        </button>
-    </section>
-</div>
+            <section class="section">
+                <div class="section-header">
+                    <h3 class="section-title">Health Metrics</h3>
+                    <span style="color: var(--text-secondary)">Last 7 days</span>
+                </div>
+                
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <img src="https://cdn.jsdelivr.net/npm/feather-icons/dist/icons/activity.svg" width="24">
+                        <h4>12,345 Steps</h4>
+                        <p style="color: var(--text-secondary)">+8% from yesterday</p>
+                    </div>
+                    <div class="stat-card">
+                        <img src="https://cdn.jsdelivr.net/npm/feather-icons/dist/icons/heart.svg" width="24">
+                        <h4>78 BPM</h4>
+                        <p style="color: var(--text-secondary)">Average heart rate</p>
+                    </div>
+                </div>
+            </section>
+
+            <section class="section">
+                <div class="section-header">
+                    <h3 class="section-title">Weekly Progress</h3>
+                </div>
+                
+                <div class="list-item">
+                    <div style="flex: 1;">
+                        <h4>Activity Time</h4>
+                        <div class="progress-bar" style="margin: 0.5rem 0;">
+                            <div class="progress-fill" style="width: 85%"></div>
+                        </div>
+                        <p style="color: var(--text-secondary)">5h 20m / 6h 15m</p>
+                    </div>
+                </div>
+                
+                <div class="list-item">
+                    <div style="flex: 1;">
+                        <h4>Distance Covered</h4>
+                        <div class="progress-bar" style="margin: 0.5rem 0;">
+                            <div class="progress-fill" style="width: 65%"></div>
+                        </div>
+                        <p style="color: var(--text-secondary)">12.4 / 20 km</p>
+                    </div>
+                </div>
+            </section>
+
+            <section class="section">
+                <button class="button" style="width: 100%; margin-bottom: 0.5rem;">
+                    Share Progress
+                </button>
+                <button class="button" style="width: 100%; background: var(--text-secondary);">
+                    Detailed Report
+                </button>
+            </section>
+        </div>
+
         <!-- Settings Page -->
         <div class="page" id="settings">
             <header class="header">
@@ -467,15 +474,15 @@
         <nav class="tab-bar">
             <a href="#profile" class="tab-item active" onclick="switchPage('profile')">
                 <img src="https://cdn.jsdelivr.net/npm/feather-icons/dist/icons/home.svg" width="24">
-                Home
+                
             </a>
             <a href="#stats" class="tab-item" onclick="switchPage('stats')">
                 <img src="https://cdn.jsdelivr.net/npm/feather-icons/dist/icons/activity.svg" width="24">
-                Stats
+                
             </a>
             <a href="#settings" class="tab-item" onclick="switchPage('settings')">
                 <img src="https://cdn.jsdelivr.net/npm/feather-icons/dist/icons/settings.svg" width="24">
-                Settings
+                
             </a>
         </nav>
     </div>
@@ -494,14 +501,12 @@
     </div>
 
     <script>
-        // Theme Management
         function toggleTheme() {
             const newTheme = document.body.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
             document.body.setAttribute('data-theme', newTheme);
             localStorage.setItem('theme', newTheme);
         }
 
-        // Page Navigation
         function switchPage(pageId) {
             document.querySelectorAll('.page').forEach(page => page.classList.remove('active'));
             document.getElementById(pageId).classList.add('active');
@@ -510,7 +515,6 @@
             window.location.hash = pageId;
         }
 
-        // Modal Handling
         function showModal(type) {
             document.getElementById('upgrade-modal').style.display = 'flex';
         }
@@ -519,28 +523,22 @@
             document.getElementById('upgrade-modal').style.display = 'none';
         }
 
-        // Initialization
         document.addEventListener('DOMContentLoaded', () => {
-            // Load saved theme
             const savedTheme = localStorage.getItem('theme') || 'light';
             document.body.setAttribute('data-theme', savedTheme);
             document.getElementById('themeSwitch').checked = savedTheme === 'dark';
 
-            // Theme switch listener
             document.getElementById('themeSwitch').addEventListener('change', toggleTheme);
 
-            // Handle modal clicks
             document.getElementById('upgrade-modal').addEventListener('click', (e) => {
                 if(e.target === e.currentTarget) hideModal();
             });
 
-            // Handle initial page load
             if(window.location.hash) {
                 switchPage(window.location.hash.substring(1));
             }
         });
 
-        // Handle back/forward navigation
         window.addEventListener('hashchange', () => {
             const pageId = window.location.hash.substring(1);
             if(pageId) switchPage(pageId);
