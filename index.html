@@ -160,8 +160,17 @@
       background-position: center;
       height: 200px;
 	  width: 700px;
+	    user-select: none; /* отключает выделение текста */
+}
     }
-	  
+
+	  a {
+  -webkit-tap-highlight-color: transparent; /* убирает подсветку на мобильных */
+  outline: none; /* убирает рамку при фокусе */
+  text-decoration: none; /* убирает подчеркивание */
+}
+
+
 /* Эффект при нажатии */
 .offer-card:active {
   transform: scale(0.97);
