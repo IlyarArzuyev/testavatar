@@ -1,154 +1,118 @@
 <!DOCTYPE html>
 <html lang="ru">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Ипотечный Калькулятор</title>
-    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.9.2/html2pdf.bundle.min.js"></script>
-    <script>
-        function formatNumber(num) {
-            return num.toString().replace(/\B(?=(\d{3})+(?!\d))/g, " ");
-        }
-
-        function parseNumber(str) {
-            return parseFloat(str.replace(/\s/g, ''));
-        }
-
-        function calculate() {
-            const amount = parseNumber(document.getElementById('amount').value);
-            const rate = parseFloat(document.getElementById('rate').value) / 100 / 12;
-            const months = parseFloat(document.getElementById('months').value);
-            const type = document.querySelector('input[name="type"]:checked').value;
-
-            let totalPayment = 0;
-            let overpayment = 0;
-            let remainingAmount = amount;
-            let payments = [];
-
-            let monthlyPaymentResult = 0;
-
-            if (type === 'annuity') {
-                const annuityCoefficient = (rate * Math.pow(1 + rate, months)) / (Math.pow(1 + rate, months) - 1);
-                monthlyPaymentResult = amount * annuityCoefficient;
-                totalPayment = monthlyPaymentResult * months;
-                overpayment = totalPayment - amount;
-
-                for (let i = 1; i <= months; i++) {
-                    const interestPayment = remainingAmount * rate;
-                    const principalPayment = monthlyPaymentResult - interestPayment;
-                    remainingAmount -= principalPayment;
-
-                    payments.push({
-                        month: i,
-                        monthlyPayment: formatNumber(monthlyPaymentResult.toFixed(2)),
-                        principalPayment: formatNumber(principalPayment.toFixed(2)),
-                        interestPayment: formatNumber(interestPayment.toFixed(2)),
-                        remainingAmount: formatNumber(remainingAmount.toFixed(2))
-                    });
-                }
-            } else {
-                const principalPayment = amount / months;
-
-                for (let i = 1; i <= months; i++) {
-                    const interestPayment = remainingAmount * rate;
-                    monthlyPaymentResult = principalPayment + interestPayment;
-                    totalPayment += monthlyPaymentResult;
-                    overpayment = totalPayment - amount;
-
-                    payments.push({
-                        month: i,
-                        monthlyPayment: formatNumber(monthlyPaymentResult.toFixed(2)),
-                        principalPayment: formatNumber(principalPayment.toFixed(2)),
-                        interestPayment: formatNumber(interestPayment.toFixed(2)),
-                        remainingAmount: formatNumber(remainingAmount.toFixed(2))
-                    });
-
-                    remainingAmount -= principalPayment;
-                }
-            }
-
-            document.getElementById('result').innerHTML = `
-                <p>Ежемесячный платёж: ${formatNumber(monthlyPaymentResult.toFixed(2))} ₸</p>
-                <p>Переплата: ${formatNumber(overpayment.toFixed(2))} ₸</p>
-                <p>Общая сумма выплат: ${formatNumber(totalPayment.toFixed(2))} ₸</p>
-            `;
-
-            sessionStorage.setItem('payments', JSON.stringify(payments));
-        }
-
-        function downloadPDF() {
-            const payments = JSON.parse(sessionStorage.getItem('payments'));
-
-            let tableContent = `
-            <div style='display: flex; justify-content: space-between; align-items: center; margin-bottom: 40px; padding: 0 10px;'>
-                <h1>Предварительный график погашения от Expert Credit</h1>
-                <img src="logo.png" alt="Логотип Expert Credit" style="height: 50px;">
-            </div>
-            <table class='table-auto w-full mt-4 border-collapse border border-gray-300' style='margin: 0 10px 0 10px;'>
-                <thead>
-                    <tr>
-                        <th class='border border-gray-300 p-2'>Месяц</th>
-                        <th class='border border-gray-300 p-2'>Ежемесячный платёж (₸)</th>
-                        <th class='border border-gray-300 p-2'>Основной долг (₸)</th>
-                        <th class='border border-gray-300 p-2'>Проценты банка (₸)</th>
-                        <th class='border border-gray-300 p-2'>Остаток долга (₸)</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    ${payments.map(payment => `
-                    <tr>
-                        <td class='border border-gray-300 p-2'>${payment.month}</td>
-                        <td class='border border-gray-300 p-2'>${payment.monthlyPayment}</td>
-                        <td class='border border-gray-300 p-2'>${payment.principalPayment}</td>
-                        <td class='border border-gray-300 p-2'>${payment.interestPayment}</td>
-                        <td class='border border-gray-300 p-2'>${payment.remainingAmount}</td>
-                    </tr>
-                    `).join('')}
-                </tbody>
-            </table>`;
-
-            const element = document.createElement('div');
-            element.innerHTML = tableContent;
-            html2pdf().from(element).save();
-        }
-
-        document.addEventListener('input', (e) => {
-            if (e.target.id === 'amount') {
-                e.target.value = formatNumber(e.target.value.replace(/\D/g, ''));
-            }
-        });
-
-    </script>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Статус ипотеки</title>
+  <!-- Materialize CSS -->
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css" rel="stylesheet">
+  <style>
+    body {
+      display: flex;
+      min-height: 100vh;
+      flex-direction: column;
+    }
+    main {
+      flex: 1 0 auto;
+    }
+    .container {
+      margin-top: 50px;
+    }
+  </style>
 </head>
-<body class="bg-gray-100 text-gray-800">
-<div class="container mx-auto p-4 max-w-lg">
-    <div class="flex justify-start mb-4">
-        <a href="#" class="bg-gray-500 text-white py-1 px-4 rounded">Назад</a>
+<body>
+  <main>
+    <div class="container">
+      <!-- Форма для ввода Telegram ID -->
+      <div class="row">
+        <div class="col s12 m8 offset-m2">
+          <div class="card">
+            <div class="card-content">
+              <span class="card-title">Проверка статуса ипотеки</span>
+              <div class="row">
+                <div class="input-field col s12">
+                  <input id="chatId" type="text">
+                  <label for="chatId">Введите ваш Telegram ID</label>
+                </div>
+              </div>
+            </div>
+            <div class="card-action">
+              <a id="checkStatusBtn" class="waves-effect waves-light btn">Проверить статус</a>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <!-- Карточка с информацией о статусе -->
+      <div class="row" id="statusCard" style="display: none;">
+        <div class="col s12 m8 offset-m2">
+          <div class="card blue lighten-4">
+            <div class="card-content">
+              <span class="card-title">Ваш статус</span>
+              <p id="statusInfo">Загрузка...</p>
+            </div>
+            <div class="card-action">
+              <a id="refreshBtn" class="waves-effect waves-light btn">Обновить статус</a>
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
-    <div class="bg-white shadow-md rounded-lg p-6">
-        <h1 class="text-2xl font-bold mb-4">Ипотечный Калькулятор</h1>
-        <div class="mb-4">
-            <label>Сумма кредита (₸):</label>
-            <input type="text" id="amount" class="border rounded p-2 w-full" placeholder="000">
-        </div>
-        <div class="mb-4">
-            <label>Процентная ставка (% годовых):</label>
-            <input type="number" id="rate" class="border rounded p-2 w-full" placeholder="10">
-        </div>
-        <div class="mb-4">
-            <label>Срок кредита (месяцев):</label>
-            <input type="number" id="months" class="border rounded p-2 w-full" placeholder="240">
-        </div>
-        <div class="mb-4">
-            <label>Тип платежа:</label><br>
-            <input type="radio" name="type" value="annuity" checked> Аннуитетный
-            <input type="radio" name="type" value="differentiated"> Дифференцированный
-        </div>
-        <button class="bg-blue-500 text-white rounded p-2 mb-4 w-full" onclick="calculate()">Рассчитать</button>
-        <button class="bg-green-500 text-white rounded p-2 mb-4 w-full" onclick="downloadPDF()">Скачать график (PDF)</button>
-        <div id="result" class="mt-4 bg-gray-50 p-4 rounded"></div>
-    </div>
-</div>
+  </main>
+  
+  <!-- Materialize JS -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
+  <script>
+    // URL вашего Google Apps Script (замените YOUR_GET_STATUS_SCRIPT_ID на актуальный ID)
+    const GET_STATUS_URL = 'https://script.google.com/macros/s/YOUR_GET_STATUS_SCRIPT_ID/exec';
+    
+    // Функция для получения статуса пользователя из Google Sheets
+    function fetchStatus(chatId) {
+      fetch(GET_STATUS_URL + '?chat_id=' + encodeURIComponent(chatId))
+        .then(response => response.json())
+        .then(data => {
+          if (data && data.status) {
+            // Формируем строку с данными пользователя
+            const statusText = `
+              👤 Вы: ${data.name || 'не указано'}<br>
+              📌 Ваш статус: ${data.status}<br>
+              ➡️ Следующий шаг: ${data.next_step}<br>
+              🧐 Эксперт: ${data.expert}<br>
+              📱 Номер эксперта: ${data.expert_phone}
+            `;
+            document.getElementById('statusInfo').innerHTML = statusText;
+            document.getElementById('statusCard').style.display = 'block';
+          } else {
+            M.toast({html: 'Данные не найдены. Возможно, сначала нажмите /start в Telegram боте.', classes: 'red'});
+          }
+        })
+        .catch(error => {
+          console.error('Ошибка получения данных:', error);
+          M.toast({html: 'Ошибка получения данных', classes: 'red'});
+        });
+    }
+    
+    document.addEventListener('DOMContentLoaded', function() {
+      M.AutoInit();
+      
+      document.getElementById('checkStatusBtn').addEventListener('click', function() {
+        const chatId = document.getElementById('chatId').value.trim();
+        if (chatId) {
+          fetchStatus(chatId);
+        } else {
+          M.toast({html: 'Введите ваш Telegram ID', classes: 'red'});
+        }
+      });
+      
+      document.getElementById('refreshBtn').addEventListener('click', function() {
+        const chatId = document.getElementById('chatId').value.trim();
+        if (chatId) {
+          fetchStatus(chatId);
+        } else {
+          M.toast({html: 'Введите ваш Telegram ID', classes: 'red'});
+        }
+      });
+    });
+  </script>
 </body>
 </html>
