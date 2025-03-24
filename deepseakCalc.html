@@ -7,72 +7,89 @@
   <!-- Materialize CSS -->
   <link href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css" rel="stylesheet">
   <style>
-    body {
-      display: flex;
-      min-height: 100vh;
-      flex-direction: column;
+    header {
+      padding: 10px 0;
+      background-color: #2196F3;
+      color: #fff;
     }
-    main {
-      flex: 1 0 auto;
-    }
-    .container {
-      margin-top: 50px;
-    }
+    .avatar {\n      width: 50px;\n      height: 50px;\n      border-radius: 50%;\n    }
+    .container {\n      margin-top: 20px;\n    }
   </style>
 </head>
 <body>
+  <!-- Шапка с приветствием и аватаркой -->
+  <header>
+    <div class="container">
+      <div class="row valign-wrapper">
+        <div class="col s6">
+          <h5 id="greeting">Здравствуй, гость!</h5>
+        </div>
+        <div class="col s6 right-align">
+          <img id="tgAvatar" src="" alt="Аватар" class="avatar">
+        </div>
+      </div>
+    </div>
+  </header>
+
   <main>
     <div class="container">
-      <!-- Форма для ввода Telegram ID -->
+      <!-- Информация о личном номере -->
+      <div class="row">
+        <div class="col s12">
+          <p id="chatIdText">Ваш личный номер: не определён! Скопируйте или введите его ниже.</p>
+          <div class="input-field">\n            <input id="chatIdInput" type="text" value="">\n            <label for="chatIdInput">Telegram ID</label>\n          </div>
+        </div>
+      </div>
+      
+      <!-- Карточка с информацией о заказе -->
       <div class="row">
         <div class="col s12 m8 offset-m2">
           <div class="card">
             <div class="card-content">
-              <span class="card-title">Проверка статуса ипотеки</span>
-              <div class="row">
-                <div class="input-field col s12">
-                  <input id="chatId" type="text">
-                  <label for="chatId">Введите ваш Telegram ID</label>
-                </div>
-              </div>
+              <span class="card-title">Ваш заказ</span>
+              <p id="orderInfo">Загрузка...</p>
             </div>
             <div class="card-action">
-              <a id="checkStatusBtn" class="waves-effect waves-light btn">Проверить статус</a>
+              <a id="rateBtn" class="waves-effect waves-light btn">Оценить менеджера</a>
             </div>
           </div>
         </div>
       </div>
       
-      <!-- Карточка с информацией о статусе -->
-      <div class="row" id="statusCard" style="display: none;">
+      <!-- Карточка для оценки менеджера -->
+      <div class="row" id="ratingSection" style="display: none;">
         <div class="col s12 m8 offset-m2">
           <div class="card blue lighten-4">
             <div class="card-content">
-              <span class="card-title">Ваш статус</span>
-              <p id="statusInfo">Загрузка...</p>
+              <span class="card-title">Оценка менеджера</span>
+              <div class="input-field">
+                <input id="rating" type="number" min="1" max="5">
+                <label for="rating">Введите оценку от 1 до 5</label>
+              </div>
             </div>
             <div class="card-action">
-              <a id="refreshBtn" class="waves-effect waves-light btn">Обновить статус</a>
+              <a id="submitRatingBtn" class="waves-effect waves-light btn">Отправить оценку</a>
             </div>
           </div>
         </div>
       </div>
+      
     </div>
   </main>
   
   <!-- Materialize JS -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
   <script>
-    // URL вашего Google Apps Script (замените YOUR_GET_STATUS_SCRIPT_ID на актуальный ID)
+    // URL‑адреса ваших Google Apps Script (замените на свои реальные URL)
     const GET_STATUS_URL = 'https://script.google.com/macros/s/YOUR_GET_STATUS_SCRIPT_ID/exec';
+    const SEND_RATING_URL = 'https://script.google.com/macros/s/YOUR_SEND_RATING_SCRIPT_ID/exec';
     
-    // Функция для получения статуса пользователя из Google Sheets
+    // Функция для получения информации о заказе из Google Sheets
     function fetchStatus(chatId) {
       fetch(GET_STATUS_URL + '?chat_id=' + encodeURIComponent(chatId))
         .then(response => response.json())
         .then(data => {
           if (data && data.status) {
-            // Формируем строку с данными пользователя
             const statusText = `
               👤 Вы: ${data.name || 'не указано'}<br>
               📌 Ваш статус: ${data.status}<br>
@@ -80,36 +97,88 @@
               🧐 Эксперт: ${data.expert}<br>
               📱 Номер эксперта: ${data.expert_phone}
             `;
-            document.getElementById('statusInfo').innerHTML = statusText;
-            document.getElementById('statusCard').style.display = 'block';
+            document.getElementById('orderInfo').innerHTML = statusText;
           } else {
             M.toast({html: 'Данные не найдены. Возможно, сначала нажмите /start в Telegram боте.', classes: 'red'});
+            document.getElementById('orderInfo').innerText = 'Заказ не найден';
           }
         })
         .catch(error => {
           console.error('Ошибка получения данных:', error);
           M.toast({html: 'Ошибка получения данных', classes: 'red'});
+          document.getElementById('orderInfo').innerText = 'Ошибка загрузки заказа';
         });
     }
     
+    // Функция для отправки оценки менеджеру
+    function sendRating(rating, chatId) {
+      fetch(SEND_RATING_URL, {
+        method: 'POST',
+        headers: {'Content-Type': 'application/json'},
+        body: JSON.stringify({ chat_id: chatId, rating: rating })
+      })
+      .then(response => response.json())
+      .then(data => {
+        M.toast({html: 'Оценка отправлена!', classes: 'green'});
+        document.getElementById('ratingSection').style.display = 'none';
+      })
+      .catch(error => {
+        console.error('Ошибка отправки оценки:', error);
+        M.toast({html: 'Ошибка отправки оценки', classes: 'red'});
+      });
+    }
+    
+    // Инициализация страницы после загрузки
     document.addEventListener('DOMContentLoaded', function() {
       M.AutoInit();
       
-      document.getElementById('checkStatusBtn').addEventListener('click', function() {
-        const chatId = document.getElementById('chatId').value.trim();
-        if (chatId) {
-          fetchStatus(chatId);
+      // Пытаемся получить данные пользователя из Telegram Web App
+      let tgUser = null;
+      if (window.Telegram && window.Telegram.WebApp && window.Telegram.WebApp.initDataUnsafe) {
+        tgUser = window.Telegram.WebApp.initDataUnsafe.user;
+      }
+      
+      // Если данные доступны, заполняем шапку и поле с Telegram ID
+      if (tgUser) {
+        const username = tgUser.username || tgUser.first_name || 'Гость';
+        document.getElementById('greeting').innerText = `Здравствуй, ${username}`;
+        if(tgUser.photo_url) {
+          document.getElementById('tgAvatar').src = tgUser.photo_url;
         } else {
-          M.toast({html: 'Введите ваш Telegram ID', classes: 'red'});
+          document.getElementById('tgAvatar').src = 'https://via.placeholder.com/50';
         }
+        document.getElementById('chatIdInput').value = tgUser.id;
+        document.getElementById('chatIdText').innerText = `Ваш личный номер: ${tgUser.id}! Скопируйте или введите его ниже.`;
+      } else {
+        // Если запущено вне Telegram, можно предложить ввести Telegram ID вручную
+        M.toast({html: 'Запустите приложение через Telegram для автоматического определения данных.', classes: 'orange'});
+      }
+      
+      // При изменении поля Telegram ID обновляем текст
+      document.getElementById('chatIdInput').addEventListener('input', function() {
+        const chatId = this.value.trim();
+        document.getElementById('chatIdText').innerText = `Ваш личный номер: ${chatId}! Скопируйте или введите его ниже.`;
       });
       
-      document.getElementById('refreshBtn').addEventListener('click', function() {
-        const chatId = document.getElementById('chatId').value.trim();
-        if (chatId) {
-          fetchStatus(chatId);
+      // Получение статуса при загрузке страницы, если chat_id определён
+      const currentChatId = document.getElementById('chatIdInput').value.trim();
+      if (currentChatId) {
+        fetchStatus(currentChatId);
+      }
+      
+      // Обработчик кнопки "Оценить менеджера"
+      document.getElementById('rateBtn').addEventListener('click', function() {
+        document.getElementById('ratingSection').style.display = 'block';
+      });
+      
+      // Обработчик отправки оценки
+      document.getElementById('submitRatingBtn').addEventListener('click', function() {
+        const rating = document.getElementById('rating').value;
+        const chatId = document.getElementById('chatIdInput').value.trim();
+        if (rating >= 1 && rating <= 5) {
+          sendRating(rating, chatId);
         } else {
-          M.toast({html: 'Введите ваш Telegram ID', classes: 'red'});
+          M.toast({html: 'Введите оценку от 1 до 5', classes: 'red'});
         }
       });
     });
