@@ -1,0 +1,265 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <title>3D Карусель карточек</title>
+  <!-- Подключение шрифта Roboto и Material Icons -->
+  <link href="https://fonts.googleapis.com/css?family=Roboto:400,500&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+  <style>
+    /* Отключение горизонтальной прокрутки и overscroll */
+    html, body {
+      margin: 0;
+      padding: 0;
+      overflow-x: hidden;
+      overscroll-behavior: none;
+    }
+    body {
+      background: linear-gradient(135deg, #0f2027, #203a43, #2c5364);
+      font-family: 'Roboto', 'Helvetica Neue', sans-serif;
+      color: #fff;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      min-height: 100vh;
+      padding-top: 70px; /* чтобы контент не попадал под фиксированную шапку */
+    }
+    /* Фиксированная шапка */
+    header {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      padding: 12px 16px;
+      background: linear-gradient(90deg, #7e57c2, #673ab7);
+      box-shadow: 0 4px 8px rgba(0,0,0,0.3);
+      display: flex;
+      align-items: center;
+      z-index: 300;
+    }
+    .back-button {
+      position: relative;
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      color: #ffffff;
+      background-color: transparent;
+      border: none;
+      font-size: 14px;
+      font-weight: 500;
+      cursor: pointer;
+      padding: 8px 12px;
+      border-radius: 4px;
+      overflow: hidden;
+      outline: none;
+    }
+    .back-button .material-icons {
+      font-size: 18px;
+    }
+    .back-button:active::after {
+      content: "";
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      top: 0;
+      left: 0;
+      background: rgba(255,255,255,0.3);
+      border-radius: inherit;
+    }
+    /* Контейнер карусели */
+    .carousel-container {
+      position: relative;
+      width: 100%;
+      max-width: 1000px;
+      height: 55vh; /* относительно высоты экрана */
+      min-height: 300px;
+      perspective: 1500px;
+      margin-top: -12px;
+      margin-down: -32px;
+    }
+    .carousel {
+      position: relative;
+      width: 100%;
+      height: 100%;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+	  
+    }
+    .slider {
+      position: relative;
+      width: 100%;
+      height: 70%;
+      transform-style: preserve-3d;
+	  
+    }
+    .slide {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      width: 40vw;
+      max-width: 280px;
+      height: 50vh;
+      max-height: 400px;
+      background-position: center;
+      background-size: cover;
+      border-radius: 20px;
+      box-shadow: 0 20px 40px rgba(0,0,0,0.7);
+      transform: translate(-50%, -50%);
+      transition: transform 0.6s ease, opacity 0.6s ease, filter 0.6s ease;
+      opacity: 0;
+      filter: blur(5px);
+    }
+    .description-block {
+      position: absolute;
+      top: calc(100% + 10px);
+      left: 50%;
+      transform: translateX(-50%);
+      width: 90%;
+      max-width: 500px;
+      background: rgba(255,255,255,0.1);
+      backdrop-filter: blur(10px);
+      padding: 1rem;
+      border-radius: 10px;
+      text-align: center;
+      font-size: 0.9rem;
+      line-height: 1.5;
+      opacity: 0;
+      transition: opacity 0.3s ease-in-out;
+    }
+    .carousel-button {
+      position: absolute;
+      top: 70%;
+      transform: translateY(-50%);
+      background: rgba(255,255,255,0.2);
+      border: none;
+      padding: 0.6rem;
+      font-size: 1.5rem;
+      color: #fff;
+      cursor: pointer;
+      border-radius: 50%;
+      backdrop-filter: blur(5px);
+      transition: background 0.3s;
+      z-index: 200;
+    }
+    .carousel-button:hover {
+      background: rgba(255,255,255,0.4);
+    }
+    .prev {
+      left: 100px;
+    }
+    .next {
+      right: 100px;
+    }
+    /* Медиа-запросы для маленьких экранов */
+    @media (max-width: 480px) {
+      header {
+        padding: 8px 12px;
+      }
+      .back-button {
+        font-size: 12px;
+        padding: 6px 10px;
+      }
+      .carousel-container {
+        height: 60vh;
+      }
+      .slider {
+        height: 70%;
+      }
+      .slide {
+        width: 60vw;
+        max-width: none;
+        height: 40vh;
+      }
+      .carousel-button {
+        padding: 0.5rem;
+        font-size: 1.2rem;
+      }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <button class="back-button" onclick="location.href='#'">
+      <span class="material-icons">arrow_back</span>
+      Назад
+    </button>
+  </header>
+  <div class="carousel-container">
+    <div class="carousel">
+      <button class="carousel-button prev">&#10094;</button>
+      <div class="slider">
+        <div class="slide" style="background-image: url('KanaB.jpg');"></div>
+        <div class="slide" style="background-image: url('KanaI.jpg');"></div>
+        <div class="slide" style="background-image: url('Salta.jpg');"></div>
+        <div class="slide" style="background-image: url('Dinara.jpg');"></div>
+        <div class="slide" style="background-image: url('Di.jpg');"></div>
+        <div class="slide" style="background-image: url('Ilyar.jpg');"></div>
+      </div>
+      <button class="carousel-button next">&#10095;</button>
+    </div>
+    <div class="description-block" id="description">
+      Здесь будет описание карточки
+    </div>
+  </div>
+
+  <script>
+    const slider = document.querySelector('.slider');
+    const slides = Array.from(document.querySelectorAll('.slide'));
+    const prevButton = document.querySelector('.prev');
+    const nextButton = document.querySelector('.next');
+    const descriptionBlock = document.getElementById('description');
+
+    let currentIndex = 0;
+    const depth = 200;
+
+    const descriptions = [
+      "Канат Дарибекович - Опытный лидер и эксперт в сфере ипотечного кредитования. Обладает глубокими знаниями рынка недвижимости и финансов, разрабатывает стратегии развития компании, нацеленные на максимальный комфорт клиентов и партнеров. Всегда в поиске новых возможностей для улучшения сервиса и условий для заемщиков.",
+      "Канат Имангалиулы - Надежный стратег и правая рука руководителя. Координирует ключевые процессы компании, контролирует выполнение задач и обеспечивает бесперебойную работу всех отделов. Благодаря профессионализму и вниманию к деталям, помогает компании достигать новых высот.",
+      "Салтанат Нурбековна - Настоящий двигатель команды! Отвечает за продажи, обучает менеджеров, внедряет эффективные техники переговоров и контролирует выполнение планов. Ее цель – максимальная продуктивность и высокий уровень клиентского сервиса.",
+      "Динара - Эксперт по недвижимости, который всегда подберет лучший вариант для клиента. Ориентируется на рынке, знает все нюансы сделок и помогает клиентам сделать выгодный выбор. Работает быстро, надежно и с полной отдачей.",
+      "Диана - Создает и продвигает имидж компании в соцсетях. Управляет контентом, разрабатывает рекламные стратегии и повышает узнаваемость бренда. Делает так, чтобы о компании говорили, доверяли и приходили за ипотекой именно к нам!",
+      "Ильяр - Отвечает за все технические процессы в компании. Разрабатывает, оптимизирует и поддерживает работу IT-инфраструктуры, обеспечивает безопасность данных и автоматизирует процессы. Благодаря ему всё работает без сбоев!"
+    ];
+
+    function updateSlides() {
+      slides.forEach((slide, index) => {
+        let offset = index - currentIndex;
+        let zIndex = -Math.abs(offset) + slides.length;
+        let scale = 1 - Math.abs(offset) * 0.1;
+        let translateX = offset * 220;
+        let translateZ = -Math.abs(offset) * depth;
+        let rotateY = offset * 20;
+
+        if (Math.abs(offset) > 2) {
+          slide.style.opacity = 0;
+          slide.style.filter = 'blur(10px)';
+        } else {
+          slide.style.opacity = 1;
+          slide.style.filter = `blur(${Math.abs(offset) * 3}px)`;
+        }
+
+        slide.style.zIndex = zIndex;
+        slide.style.transform = `translate(-50%, -50%) translateX(${translateX}px) scale(${scale}) rotateY(${rotateY}deg) translateZ(${translateZ}px)`;
+      });
+
+      descriptionBlock.textContent = descriptions[currentIndex];
+      descriptionBlock.style.opacity = 1;
+    }
+
+    prevButton.addEventListener('click', () => {
+      currentIndex = (currentIndex - 1 + slides.length) % slides.length;
+      updateSlides();
+    });
+
+    nextButton.addEventListener('click', () => {
+      currentIndex = (currentIndex + 1) % slides.length;
+      updateSlides();
+    });
+
+    updateSlides();
+  </script>
+</body>
+</html>
