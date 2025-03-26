@@ -182,7 +182,7 @@
 </head>
 <body>
   <header>
-    <button class="back-button" onclick="location.href='#'">
+    <button class="back-button" onclick="location.href='index.html'">
       <span class="material-icons">arrow_back</span>
       Назад
     </button>
